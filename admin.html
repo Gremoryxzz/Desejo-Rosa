@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Bela Rosa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<header class="a-header">
+  <h1 onclick="irParaHome()">Bela Rosa</h1>
+  <div class="a-header-right">
+    <button class="btn-ghost" onclick="irParaHome()">Ver loja</button>
+    <button class="btn-ghost btn-danger" id="logout">Sair</button>
+  </div>
+</header>
+
+<div class="admin-layout">
+
+  <aside class="sidebar">
+    <nav class="sidebar-nav">
+      <a href="#section-produto" class="nav-item active" data-target="section-produto">
+        <span class="nav-icon">＋</span> Novo produto
+      </a>
+      <a href="#section-banner" class="nav-item" data-target="section-banner">
+        <span class="nav-icon">◈</span> Banners
+      </a>
+      <a href="#section-lista" class="nav-item" data-target="section-lista">
+        <span class="nav-icon">≡</span> Produtos
+      </a>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+
+    <section class="a-section" id="section-produto">
+      <div class="a-section-header">
+        <h2>Cadastrar Produto</h2>
+        <p>Adicione novos itens à loja</p>
+      </div>
+      <div class="a-form">
+        <div class="file-drop" id="dropZona">
+          <input type="file" id="imagem" accept="image/*" hidden>
+          <div class="drop-inner" id="dropInner">
+            <span class="drop-icon">⊕</span>
+            <p>Clique ou arraste a imagem aqui</p>
+            <span class="drop-sub">JPG, PNG, WEBP</span>
+          </div>
+          <img id="preview" style="display:none" alt="Preview">
+        </div>
+        <div class="a-fields">
+          <div class="field">
+            <label>Nome do produto</label>
+            <input type="text" id="nome" placeholder="Ex: Conjunto Rendado Rosa">
+          </div>
+          <div class="field">
+            <label>Preço (R$)</label>
+            <input type="text" id="preco" placeholder="Ex: 89.90">
+          </div>
+          <div class="field">
+            <label>Categoria</label>
+            <select id="categoria">
+              <option value="lancamento">Lançamento</option>
+              <option value="novidade">Novidade</option>
+              <option value="outro">Produto</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" id="add">
+          <span id="addTexto">Adicionar Produto</span>
+        </button>
+        <div id="addMsg" class="msg" style="display:none"></div>
+      </div>
+    </section>
+
+    <section class="a-section" id="section-banner">
+      <div class="a-section-header">
+        <h2>Adicionar Banner</h2>
+        <p>Gerencie o slider da página inicial</p>
+      </div>
+      <div class="a-form">
+        <div class="file-drop" id="dropBanner">
+          <input type="file" id="bannerImagem" accept="image/*" hidden>
+          <div class="drop-inner" id="dropBannerInner">
+            <span class="drop-icon">⊕</span>
+            <p>Clique para selecionar o banner</p>
+            <span class="drop-sub">Recomendado: 1920×800px</span>
+          </div>
+          <img id="bannerPreview" style="display:none" alt="Preview banner">
+        </div>
+        <div class="a-fields">
+          <div class="field">
+            <label>Título</label>
+            <input type="text" id="bannerTitulo" placeholder="Ex: Nova Coleção">
+          </div>
+          <div class="field">
+            <label>Subtítulo</label>
+            <input type="text" id="bannerSubtitulo" placeholder="Ex: Delicadeza em cada detalhe">
+          </div>
+        </div>
+        <button class="btn-primary" id="addBanner">
+          <span id="bannerTexto">Adicionar Banner</span>
+        </button>
+        <div id="bannerMsg" class="msg" style="display:none"></div>
+      </div>
+    </section>
+
+    <section class="a-section" id="section-lista">
+      <div class="a-section-header">
+        <h2>Produtos cadastrados</h2>
+        <p id="totalProdutos"></p>
+      </div>
+      <div id="listaAdmin"></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="javascript/admin.js"></script>
+<script>
+function irParaHome() { window.location.href = "index.html"; }
+</script>
+</body>
+</html>

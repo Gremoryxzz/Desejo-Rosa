@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bela Rosa — Lingerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<header id="header">
+  <div class="header-inner">
+    <nav class="nav-left">
+      <a href="#novidades">Novidades</a>
+      <a href="#lancamentos">Lançamentos</a>
+      <a href="#produtos">Produtos</a>
+    </nav>
+    <h1 class="logo" onclick="location.reload()">Bela Rosa</h1>
+    <div class="nav-right">
+      <!-- O ícone do carrinho é injetado pelo script.js -->
+      <a href="login.html" class="btn-login">Entrar</a>
+    </div>
+  </div>
+</header>
+
+<!-- BANNER -->
+<section class="banner" id="banner">
+  <div class="slider" id="slider"></div>
+  <div class="banner-overlay"></div>
+  <div class="banner-texto" id="bannerTexto">
+    <span class="banner-tag">Coleção 2025</span>
+    <h2></h2>
+    <p></p>
+    <a href="#novidades" class="banner-btn">Explorar</a>
+  </div>
+  <div class="slider-dots" id="sliderDots"></div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <span>✦ Frete Grátis acima de R$150</span>
+  <span>✦ Troca Fácil em 30 dias</span>
+  <span>✦ Pagamento Seguro</span>
+  <span>✦ Atendimento via WhatsApp</span>
+</div>
+
+<!-- NOVIDADES -->
+<section class="secao" id="novidades">
+  <div class="secao-header">
+    <span class="secao-tag">Recém chegou</span>
+    <h2>Novidades</h2>
+  </div>
+  <div class="grid" id="novidades-grid"></div>
+</section>
+
+<!-- LANCAMENTOS -->
+<section class="secao secao-alt" id="lancamentos">
+  <div class="secao-header">
+    <span class="secao-tag">Em destaque</span>
+    <h2>Lançamentos</h2>
+  </div>
+  <div class="grid" id="lancamentos-grid"></div>
+</section>
+
+<!-- PRODUTOS -->
+<section class="secao" id="produtos">
+  <div class="secao-header">
+    <span class="secao-tag">Coleção completa</span>
+    <h2>Produtos</h2>
+  </div>
+  <div class="grid" id="produtos-grid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <h3>Bela Rosa</h3>
+      <p>Lingerie com delicadeza e sofisticação para todas as mulheres.</p>
+    </div>
+    <div class="footer-links">
+      <a href="https://wa.me/5521973254935" target="_blank">WhatsApp</a>
+      <a href="#novidades">Novidades</a>
+      <a href="#lancamentos">Lançamentos</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Bela Rosa Lingerie. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="javascript/carrinho.js"></script>
+<script src="javascript/script.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Produto — Bela Rosa</title>
+<title>Produto — Desejo Rosa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/produto.css">
@@ -11,7 +11,7 @@
 <body>
 
 <header class="p-header">
-  <a href="index.html" class="p-logo">Bela Rosa</a>
+  <a href="index.html" class="p-logo">Desejo Rosa</a>
   <a href="index.html" class="p-back">← Voltar</a>
 </header>
 
@@ -26,10 +26,16 @@
     <span class="p-tag" id="categoria"></span>
     <h2 id="nome"></h2>
     <p class="p-preco" id="preco"></p>
+    <p class="p-estoque" id="estoque-info"></p>
 
     <div class="p-divider"></div>
 
-    <p class="p-desc">Peça exclusiva da coleção Bela Rosa. Material de alta qualidade, confortável e elegante.</p>
+    <p class="p-desc">Peça exclusiva da coleção Desejo Rosa. Material de alta qualidade, confortável e elegante.</p>
+
+    <!-- Botões de ação -->
+    <div class="p-acoes" id="p-acoes">
+      <!-- Injetados pelo produto.js -->
+    </div>
 
     <a id="whatsapp" class="btn-comprar" target="_blank">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -40,7 +46,6 @@
   </div>
 </main>
 
-<!-- carrinho.js ANTES de produto.js para que Carrinho esteja disponível -->
 <script src="javascript/carrinho.js"></script>
 <script src="javascript/produto.js"></script>
 </body>

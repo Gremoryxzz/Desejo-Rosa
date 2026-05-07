@@ -9,89 +9,124 @@ if (produto) {
   const catMap = { lancamento: "Lançamento", novidade: "Novidade", outro: "Produto" };
   document.getElementById("categoria").textContent = catMap[produto.categoria] || "Produto";
 
+  // Estoque
+  const estoqueEl = document.getElementById("estoque-info");
+  const estN = Number(produto.estoque) || 0;
+  if (produto.estoque !== undefined) {
+    if (estN === 0) {
+      estoqueEl.textContent = "⚠ Fora de estoque";
+      estoqueEl.className = "p-estoque sem-estoque";
+    } else if (estN <= 3) {
+      estoqueEl.textContent = `⚡ Últimas ${estN} peças!`;
+      estoqueEl.className = "p-estoque estoque-baixo";
+    } else {
+      estoqueEl.textContent = `✓ Em estoque`;
+      estoqueEl.className = "p-estoque em-estoque";
+    }
+  }
+
   const mensagem = encodeURIComponent(`Olá! Tenho interesse no produto: ${produto.nome} — R$ ${Number(produto.preco).toFixed(2)}`);
   document.getElementById("whatsapp").href = `https://wa.me/5521973254935?text=${mensagem}`;
 
-  // ── Botão Adicionar ao Carrinho ──────────────────────────────
-  injetarBotaoCarrinho(produto);
+  injetarBotoes(produto);
 
 } else {
   window.location.href = "index.html";
 }
 
-function injetarBotaoCarrinho(produto) {
-  const infoProduto = document.querySelector(".info-produto");
-  const divider = document.querySelector(".p-divider");
-  if (!infoProduto || document.getElementById("btn-add-produto")) return;
+function injetarBotoes(produto) {
+  const acoes = document.getElementById("p-acoes");
+  if (!acoes) return;
 
-  // Estilos inline para o botão e link "Ver carrinho"
+  const estN = Number(produto.estoque) || 0;
+  const semEstoque = produto.estoque !== undefined && estN === 0;
+
   const style = document.createElement("style");
   style.textContent = `
-    #btn-add-produto {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 16px;
-      margin-bottom: 12px;
-      background: #1a1a1a;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-family: 'Jost', sans-serif;
-      font-size: 13px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background .2s, transform .1s;
+    .p-acoes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+    .btn-comprar-agora {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 17px;
+      background: var(--rose);
+      color: #fff; border: none; border-radius: 10px;
+      font-family: 'Jost', sans-serif; font-size: 13px;
+      font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+      cursor: pointer; transition: background .2s, transform .1s;
     }
-    #btn-add-produto:hover { background: #3a3a3a; }
-    #btn-add-produto:active { transform: scale(.98); }
-    #link-ver-carrinho {
-      display: none;
-      text-align: center;
-      font-family: 'Jost', sans-serif;
-      font-size: 12px;
-      color: #888;
-      text-decoration: underline;
-      cursor: pointer;
-      margin-bottom: 16px;
-      letter-spacing: .04em;
+    .btn-comprar-agora:hover:not(:disabled)  { background: var(--rose-dark); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(160,48,80,.2); }
+    .btn-comprar-agora:active:not(:disabled) { transform: scale(.98); }
+    .btn-comprar-agora:disabled { opacity: .4; cursor: not-allowed; }
+
+    .btn-add-carrinho {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 15px;
+      background: transparent; color: var(--black);
+      border: 1.5px solid rgba(26,18,24,.2); border-radius: 10px;
+      font-family: 'Jost', sans-serif; font-size: 13px;
+      font-weight: 400; letter-spacing: .1em; text-transform: uppercase;
+      cursor: pointer; transition: all .2s;
     }
+    .btn-add-carrinho:hover:not(:disabled) { border-color: var(--black); background: rgba(26,18,24,.04); }
+    .btn-add-carrinho:disabled { opacity: .4; cursor: not-allowed; }
+
+    .link-ver-carrinho {
+      display: none; text-align: center;
+      font-family: 'Jost', sans-serif; font-size: 12px;
+      color: #888; text-decoration: underline;
+      cursor: pointer; letter-spacing: .04em;
+    }
+
+    .p-estoque { font-size: 13px; font-weight: 400; margin-bottom: 10px; letter-spacing: .3px; }
+    .em-estoque  { color: #276749; }
+    .estoque-baixo { color: #92400e; }
+    .sem-estoque { color: #c53030; }
   `;
   document.head.appendChild(style);
 
-  // Cria os elementos
-  const btn = document.createElement("button");
-  btn.id = "btn-add-produto";
-  btn.innerHTML = `
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-      <line x1="3" y1="6" x2="21" y2="6"/>
-      <path d="M16 10a4 4 0 01-8 0"/>
-    </svg>
-    Adicionar ao carrinho
+  acoes.innerHTML = `
+    <button class="btn-comprar-agora" id="btn-comprar-agora" ${semEstoque ? 'disabled' : ''}>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+      </svg>
+      ${semEstoque ? 'Sem estoque' : 'Comprar agora'}
+    </button>
+    <button class="btn-add-carrinho" id="btn-add-carrinho" ${semEstoque ? 'disabled' : ''}>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      Adicionar ao carrinho
+    </button>
+    <span class="link-ver-carrinho" id="link-ver-carrinho">→ Ver carrinho</span>
   `;
 
-  const linkCarrinho = document.createElement("span");
-  linkCarrinho.id = "link-ver-carrinho";
-  linkCarrinho.textContent = "→ Ver carrinho";
-  linkCarrinho.onclick = () => window.location.href = "carrinho.html";
-
-  // Insere antes do .p-divider (que está acima da descrição)
-  infoProduto.insertBefore(linkCarrinho, divider);
-  infoProduto.insertBefore(btn, linkCarrinho);
-
-  // Evento
-  btn.addEventListener("click", () => {
+  // Comprar agora → vai direto pro checkout
+  document.getElementById("btn-comprar-agora")?.addEventListener("click", () => {
     Carrinho.adicionar({
       id:     String(produto.id),
       nome:   produto.nome,
       preco:  Number(produto.preco),
       imagem: produto.imagem
     });
-    linkCarrinho.style.display = "block";
+    window.location.href = "checkout.html";
+  });
+
+  // Adicionar ao carrinho → permanece na página
+  document.getElementById("btn-add-carrinho")?.addEventListener("click", () => {
+    Carrinho.adicionar({
+      id:     String(produto.id),
+      nome:   produto.nome,
+      preco:  Number(produto.preco),
+      imagem: produto.imagem
+    });
+    const link = document.getElementById("link-ver-carrinho");
+    if (link) link.style.display = "block";
+  });
+
+  document.getElementById("link-ver-carrinho")?.addEventListener("click", () => {
+    window.location.href = "carrinho.html";
   });
 }

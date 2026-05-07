@@ -103,6 +103,7 @@ async function carregarProdutos() {
     const label = p.categoria === 'lancamento' ? 'Lançamento' : p.categoria === 'novidade' ? 'Novidade' : '';
     const produtoJson = JSON.stringify(p).split('"').join('&quot;');
 
+    const semEstoque = Number(p.estoque) === 0 && p.estoque !== null && p.estoque !== undefined;
     const card = `
       <div class="card">
         <div class="card-img-wrap" onclick="abrirProduto(${produtoJson})" style="cursor:pointer">
@@ -115,9 +116,14 @@ async function carregarProdutos() {
         <div class="card-info">
           <p class="nome">${p.nome}</p>
           <p class="preco">R$ ${preco.toFixed(2)}</p>
-          <button class="btn-adicionar" onclick="adicionarAoCarrinho(event, '${p.id}', '${p.nome.replace(/'/g, "\\'")}', ${preco}, '${p.imagem}')">
-            + Adicionar ao carrinho
-          </button>
+          <div class="card-btns">
+            <button class="btn-comprar-agora" ${semEstoque ? 'disabled' : ''} onclick="comprarAgora(event, ${produtoJson})">
+              ${semEstoque ? 'Sem estoque' : 'Comprar agora'}
+            </button>
+            <button class="btn-adicionar" ${semEstoque ? 'disabled' : ''} onclick="adicionarAoCarrinho(event, '${p.id}', '${p.nome.replace(/'/g, "\\'")}', ${preco}, '${p.imagem}')">
+              + Adicionar ao carrinho
+            </button>
+          </div>
         </div>
       </div>`;
 
@@ -130,6 +136,12 @@ async function carregarProdutos() {
 function abrirProduto(p) {
   localStorage.setItem("produtoSelecionado", JSON.stringify(p));
   window.location.href = "produto.html";
+}
+
+function comprarAgora(e, p) {
+  e.stopPropagation();
+  Carrinho.adicionar({ id: String(p.id), nome: p.nome, preco: Number(p.preco), imagem: p.imagem });
+  window.location.href = "checkout.html";
 }
 
 function adicionarAoCarrinho(e, id, nome, preco, imagem) {

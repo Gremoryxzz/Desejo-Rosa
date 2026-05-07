@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — Bela Rosa</title>
+<title>Admin — Desejo Rosa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/admin.css">
@@ -11,7 +11,7 @@
 <body>
 
 <header class="a-header">
-  <h1 onclick="irParaHome()">Bela Rosa</h1>
+  <h1 onclick="irParaHome()">Desejo Rosa</h1>
   <div class="a-header-right">
     <button class="btn-ghost" onclick="irParaHome()">Ver loja</button>
     <button class="btn-ghost btn-danger" id="logout">Sair</button>
@@ -19,7 +19,6 @@
 </header>
 
 <div class="admin-layout">
-
   <aside class="sidebar">
     <nav class="sidebar-nav">
       <a href="#section-produto" class="nav-item active" data-target="section-produto">
@@ -31,11 +30,15 @@
       <a href="#section-lista" class="nav-item" data-target="section-lista">
         <span class="nav-icon">≡</span> Produtos
       </a>
+      <a href="#section-pedidos" class="nav-item" data-target="section-pedidos">
+        <span class="nav-icon">📦</span> Pedidos
+      </a>
     </nav>
   </aside>
 
   <main class="admin-main">
 
+    <!-- CADASTRAR PRODUTO -->
     <section class="a-section" id="section-produto">
       <div class="a-section-header">
         <h2>Cadastrar Produto</h2>
@@ -68,6 +71,10 @@
               <option value="outro">Produto</option>
             </select>
           </div>
+          <div class="field">
+            <label>Estoque (peças)</label>
+            <input type="number" id="estoque" placeholder="Ex: 10" min="0">
+          </div>
         </div>
         <button class="btn-primary" id="add">
           <span id="addTexto">Adicionar Produto</span>
@@ -76,6 +83,7 @@
       </div>
     </section>
 
+    <!-- BANNERS -->
     <section class="a-section" id="section-banner">
       <div class="a-section-header">
         <h2>Adicionar Banner</h2>
@@ -108,6 +116,7 @@
       </div>
     </section>
 
+    <!-- LISTA PRODUTOS -->
     <section class="a-section" id="section-lista">
       <div class="a-section-header">
         <h2>Produtos cadastrados</h2>
@@ -116,14 +125,34 @@
       <div id="listaAdmin"></div>
     </section>
 
+    <!-- PEDIDOS -->
+    <section class="a-section" id="section-pedidos">
+      <div class="a-section-header">
+        <h2>Pedidos</h2>
+        <div class="pedidos-meta">
+          <p id="totalPedidos"></p>
+          <span class="badge-pendentes" id="pedidosPendentes" style="display:none"></span>
+        </div>
+      </div>
+      <div class="pedidos-filtro">
+        <select id="filtroPedidos">
+          <option value="todos">Todos os pedidos</option>
+          <option value="pendente">Pendente</option>
+          <option value="pago">Pago</option>
+          <option value="enviado">Enviado</option>
+          <option value="entregue">Entregue</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+      </div>
+      <div id="listaPedidos"></div>
+    </section>
+
   </main>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
 <script src="javascript/admin.js"></script>
-<script>
-function irParaHome() { window.location.href = "index.html"; }
-</script>
+<script>function irParaHome() { window.location.href = "index.html"; }</script>
 </body>
 </html>

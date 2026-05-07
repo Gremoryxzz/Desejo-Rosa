@@ -393,7 +393,49 @@ nav a:hover::after, .nav-left a:hover::after { width: 100%; }
   font-size: 20px;
   font-weight: 400;
   color: var(--rose);
+  margin-bottom: 14px;
 }
+
+.card-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-comprar-agora {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--rose);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s, transform .1s;
+}
+.btn-comprar-agora:hover  { background: var(--rose-dark); transform: translateY(-1px); }
+.btn-comprar-agora:active { transform: scale(.97); }
+
+.btn-adicionar {
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  color: var(--black);
+  border: 1.5px solid rgba(26,18,24,.18);
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+.btn-adicionar:hover { border-color: var(--black); background: rgba(26,18,24,.04); }
 
 /* Loading state */
 .loading-grid {

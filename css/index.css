@@ -114,8 +114,9 @@ nav a:hover::after, .nav-left a:hover::after { width: 100%; }
 /* ─── BANNER ─── */
 .banner {
   position: relative;
-  height: 100vh;
-  min-height: 600px;
+  height: 80vh;
+  min-height: 500px;
+  max-height: 800px;
   overflow: hidden;
   margin-top: 72px;
 }
@@ -131,11 +132,30 @@ nav a:hover::after, .nav-left a:hover::after { width: 100%; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
   opacity: 0;
   transition: opacity 1.4s cubic-bezier(0.4,0,0.2,1);
 }
 
 .slider img.ativo { opacity: 1; }
+
+/* Desktop: esconde imagem mobile */
+@media (min-width: 769px) {
+  .slider img.img-mobile  { display: none; }
+  .slider img.img-desktop { display: block; }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .banner {
+    height: 100vw;
+    min-height: 320px;
+    max-height: 520px;
+    margin-top: 60px;
+  }
+  .slider img.img-mobile  { display: block; }
+  .slider img.img-desktop { display: none; }
+}
 
 .banner-overlay {
   position: absolute;

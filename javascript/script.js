@@ -49,21 +49,36 @@ async function carregarBanners() {
   dotsContainer.innerHTML = "";
 
   data.forEach((b, i) => {
-    slider.innerHTML += `<img src="${b.imagem}" class="${i === 0 ? "ativo" : ""}" alt="${b.titulo || ''}">`;
-    dotsContainer.innerHTML += `<div class="dot ${i === 0 ? 'ativo' : ''}" data-index="${i}"></div>`;
+    const ativo = i === 0 ? "ativo" : "";
+    if (b.imagem_mobile) {
+      slider.innerHTML += `<img src="${b.imagem}" class="img-desktop ${ativo}" alt="${b.titulo || ''}">`;
+      slider.innerHTML += `<img src="${b.imagem_mobile}" class="img-mobile ${ativo}" alt="${b.titulo || ''}">`;
+    } else {
+      slider.innerHTML += `<img src="${b.imagem}" class="${ativo}" alt="${b.titulo || ''}" style="object-position:center center;">`;
+    }
+    dotsContainer.innerHTML += `<div class="dot ${ativo}" data-index="${i}"></div>`;
   });
 
-  const imagens = document.querySelectorAll(".slider img");
   const dots = document.querySelectorAll(".dot");
   let index = 0;
 
   function goTo(i) {
-    imagens.forEach(img => img.classList.remove("ativo"));
-    dots.forEach(d => d.classList.remove("ativo"));
     index = (i + data.length) % data.length;
-    imagens[index].classList.add("ativo");
-    dots[index].classList.add("ativo");
     const atual = data[index];
+
+    // Desativa todas as imagens
+    slider.querySelectorAll("img").forEach(img => img.classList.remove("ativo"));
+    dots.forEach(d => d.classList.remove("ativo"));
+
+    // Ativa as imagens do slide atual (pode ser desktop+mobile)
+    if (atual.imagem_mobile) {
+      slider.querySelectorAll(".img-desktop")[index]?.classList.add("ativo");
+      slider.querySelectorAll(".img-mobile")[index]?.classList.add("ativo");
+    } else {
+      slider.querySelectorAll("img")[index]?.classList.add("ativo");
+    }
+
+    dots[index]?.classList.add("ativo");
     texto.querySelector("h2").textContent = atual.titulo || "";
     texto.querySelector("p").textContent = atual.subtitulo || "";
   }
@@ -153,3 +168,17 @@ function adicionarAoCarrinho(e, id, nome, preco, imagem) {
 injetarCarrinhoHeader();
 carregarBanners();
 carregarProdutos();
+
+// Detecta se cliente está logado e atualiza botão
+window.db?.auth.getSession().then(({ data }) => {
+  const btn = document.getElementById("btn-login-header");
+  if (!btn) return;
+  if (data.session) {
+    const email = data.session.user.email;
+    const ADMIN_EMAIL = "wallacegremory@gmail.com";
+    if (email === ADMIN_EMAIL) return; // admin: mantém botão "Entrar"
+    const nome = data.session.user.user_metadata?.nome || email.split("@")[0];
+    btn.textContent = nome.split(" ")[0];
+    btn.href = "minha-conta.html";
+  }
+});

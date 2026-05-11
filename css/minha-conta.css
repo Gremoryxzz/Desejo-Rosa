@@ -1,0 +1,457 @@
+:root {
+  --rose: #c8506e;
+  --rose-dark: #a03050;
+  --rose-pale: #fdf3f5;
+  --rose-light: #f0d5db;
+  --black: #1a1218;
+  --gray: #6b5c62;
+  --light: #faf8f9;
+  --border: rgba(200,80,110,0.12);
+  --serif: 'Cormorant Garamond', serif;
+  --sans: 'Jost', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  font-weight: 300;
+  background: var(--light);
+  color: var(--black);
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.mc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  height: 68px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.mc-logo {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--rose);
+  text-decoration: none;
+}
+
+.mc-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.mc-nav a {
+  font-size: 12px;
+  color: var(--gray);
+  text-decoration: none;
+  letter-spacing: .05em;
+  transition: color .2s;
+}
+.mc-nav a:hover { color: var(--black); }
+
+.btn-sair {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--gray);
+  padding: 7px 16px;
+  border-radius: 2px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-sair:hover { border-color: #e53e3e; color: #e53e3e; }
+
+/* ── Layout ── */
+.mc-main {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .mc-main { grid-template-columns: 1fr; padding: 20px; }
+  .mc-header { padding: 0 20px; }
+}
+
+/* ── Sidebar ── */
+.mc-sidebar {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  position: sticky;
+  top: 88px;
+}
+
+.mc-perfil {
+  padding: 28px 24px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  background: var(--rose-pale);
+}
+
+.mc-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--rose);
+  color: white;
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.mc-nome {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--black);
+  margin-bottom: 4px;
+}
+
+.mc-email {
+  font-size: 12px;
+  color: var(--gray);
+  letter-spacing: .3px;
+}
+
+.mc-menu {
+  padding: 12px 0;
+}
+
+.mc-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 24px;
+  font-size: 13px;
+  color: var(--gray);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all .2s;
+  text-decoration: none;
+}
+
+.mc-menu-item:hover,
+.mc-menu-item.ativo {
+  color: var(--rose);
+  background: var(--rose-pale);
+  border-left-color: var(--rose);
+}
+
+/* ── Conteúdo ── */
+.mc-conteudo { min-width: 0; }
+
+.mc-tab { display: none; }
+.mc-tab.ativo { display: block; }
+
+.mc-tab-header {
+  margin-bottom: 24px;
+}
+
+.mc-tab-header h2 {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--black);
+  margin-bottom: 4px;
+}
+
+.mc-tab-header p {
+  font-size: 13px;
+  color: var(--gray);
+}
+
+/* ── Cards de pedido ── */
+.pedido-cliente {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: box-shadow .2s;
+}
+.pedido-cliente:hover { box-shadow: 0 4px 20px rgba(200,80,110,.08); }
+
+.ped-cliente-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: var(--rose-pale);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ped-cliente-num {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--black);
+}
+
+.ped-cliente-data {
+  font-size: 11px;
+  color: var(--gray);
+  margin-top: 2px;
+}
+
+.status-badge {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+.status-pendente  { background: #fff3cd; color: #856404; }
+.status-pago      { background: #d4edda; color: #155724; }
+.status-enviado   { background: #cce5ff; color: #004085; }
+.status-entregue  { background: #d1ecf1; color: #0c5460; }
+.status-cancelado { background: #f8d7da; color: #721c24; }
+
+.ped-cliente-body {
+  padding: 16px 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.ped-cliente-itens {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 200px;
+}
+
+.ped-item-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ped-item-linha img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--rose-pale);
+  flex-shrink: 0;
+}
+
+.ped-item-linha p { font-size: 13px; color: var(--black); margin-bottom: 2px; }
+.ped-item-linha small { font-size: 11px; color: var(--gray); }
+
+.ped-cliente-total {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.ped-total-label { font-size: 10px; color: var(--gray); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.ped-total-val   { font-family: var(--serif); font-size: 1.5rem; font-weight: 600; color: var(--rose); }
+.ped-metodo      { font-size: 11px; color: var(--gray); margin-top: 4px; }
+
+/* Empty state */
+.mc-vazio {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--gray);
+}
+.mc-vazio-icon { font-size: 3rem; display: block; margin-bottom: 16px; }
+.mc-vazio p { font-size: 14px; margin-bottom: 20px; }
+.mc-vazio a {
+  display: inline-block;
+  padding: 12px 28px;
+  background: var(--rose);
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: background .2s;
+}
+.mc-vazio a:hover { background: var(--rose-dark); }
+
+/* ── Formulário dados ── */
+.mc-form {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 32px;
+  max-width: 500px;
+}
+
+.mc-campo {
+  margin-bottom: 20px;
+}
+
+.mc-campo label {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 8px;
+}
+
+.mc-campo input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--black);
+  outline: none;
+  background: white;
+  transition: border-color .2s;
+}
+.mc-campo input:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(200,80,110,.06); }
+.mc-campo input[readonly] { background: var(--light); color: var(--gray); cursor: default; }
+
+.btn-salvar {
+  background: var(--rose);
+  color: white;
+  border: none;
+  padding: 13px 28px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-salvar:hover { background: var(--rose-dark); transform: translateY(-1px); }
+
+/* Skeleton */
+.skeleton {
+  background: var(--rose-pale);
+  border-radius: 8px;
+  height: 100px;
+  margin-bottom: 12px;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+/* ── Extrato ── */
+.mc-extrato { margin-bottom: 24px; }
+
+.extrato-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, var(--rose) 0%, var(--rose-dark) 100%);
+  color: white;
+  border-radius: 10px;
+  padding: 20px 24px;
+  max-width: 280px;
+}
+
+.extrato-icon { font-size: 1.8rem; }
+
+.extrato-label {
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: .8;
+  margin-bottom: 4px;
+}
+
+.extrato-val {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+/* ── Progresso do pedido ── */
+.ped-progresso {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.progresso-etapas {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.etapa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.etapa-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--border);
+  border: 2px solid var(--border);
+  transition: all .3s;
+}
+
+.etapa.ativa .etapa-dot {
+  background: var(--rose);
+  border-color: var(--rose);
+  box-shadow: 0 0 0 3px rgba(200,80,110,.15);
+}
+
+.etapa-label {
+  font-size: 10px;
+  color: var(--gray);
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+
+.etapa.ativa .etapa-label { color: var(--rose); font-weight: 500; }
+
+.etapa-linha {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  margin-bottom: 16px;
+  transition: background .3s;
+  min-width: 24px;
+}
+
+.etapa-linha.ativa { background: var(--rose); }
+
+/* Endereço no pedido */
+.ped-endereco {
+  font-size: 11px;
+  color: var(--gray);
+  margin-top: 8px;
+  line-height: 1.5;
+}

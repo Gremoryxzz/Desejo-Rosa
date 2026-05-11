@@ -1,25 +1,90 @@
 const ADMIN_EMAIL = "wallacegremory@gmail.com";
 
+// ── Modal de confirmação customizado ─────────────────────
+function confirmar(mensagem) {
+  return new Promise(resolve => {
+    let modal = document.getElementById('modal-confirmar');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'modal-confirmar';
+      modal.style.cssText = `
+        position:fixed;inset:0;z-index:9999;
+        display:flex;align-items:center;justify-content:center;
+        background:rgba(26,18,24,.45);backdrop-filter:blur(4px);
+        animation:fadeIn .2s ease;
+      `;
+      document.body.appendChild(modal);
+      const s = document.createElement('style');
+      s.textContent = `
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+        #modal-confirmar .modal-box{
+          background:#fff;border-radius:8px;padding:32px 36px;
+          max-width:380px;width:90%;text-align:center;
+          box-shadow:0 20px 60px rgba(26,18,24,.18);
+          animation:slideUp .25s ease;
+        }
+        #modal-confirmar .modal-msg{
+          font-family:'Jost',sans-serif;font-size:15px;font-weight:300;
+          color:var(--black);margin-bottom:24px;line-height:1.5;
+        }
+        #modal-confirmar .modal-btns{display:flex;gap:10px;justify-content:center;}
+        #modal-confirmar .modal-ok{
+          background:var(--rose);color:#fff;border:none;
+          padding:10px 28px;border-radius:4px;
+          font-family:'Jost',sans-serif;font-size:12px;
+          font-weight:500;letter-spacing:1.5px;text-transform:uppercase;
+          cursor:pointer;transition:background .2s;
+        }
+        #modal-confirmar .modal-ok:hover{background:var(--rose-dark);}
+        #modal-confirmar .modal-cancel{
+          background:transparent;color:var(--gray);
+          border:1px solid rgba(200,80,110,.2);
+          padding:10px 28px;border-radius:4px;
+          font-family:'Jost',sans-serif;font-size:12px;
+          font-weight:400;letter-spacing:1px;text-transform:uppercase;
+          cursor:pointer;transition:all .2s;
+        }
+        #modal-confirmar .modal-cancel:hover{border-color:var(--gray);color:var(--black);}
+      `;
+      document.head.appendChild(s);
+    }
+    modal.innerHTML = `
+      <div class="modal-box">
+        <p class="modal-msg">${mensagem}</p>
+        <div class="modal-btns">
+          <button class="modal-cancel" id="modal-nao">Cancelar</button>
+          <button class="modal-ok" id="modal-sim">Confirmar</button>
+        </div>
+      </div>`;
+    modal.style.display = 'flex';
+    document.getElementById('modal-sim').onclick  = () => { modal.style.display='none'; resolve(true); };
+    document.getElementById('modal-nao').onclick  = () => { modal.style.display='none'; resolve(false); };
+    modal.onclick = (e) => { if (e.target === modal) { modal.style.display='none'; resolve(false); } };
+  });
+}
+
 async function verificarLogin() {
   const { data } = await window.db.auth.getUser();
   const user = data.user;
   if (!user) { window.location.href = "login.html"; return; }
   if (user.email !== ADMIN_EMAIL) {
-    alert("Acesso restrito ao administrador.");
     await window.db.auth.signOut();
     window.location.href = "login.html";
     return;
   }
   carregarProdutos();
   carregarPedidos();
+  carregarBannersAdmin();
 }
 verificarLogin();
 
 document.getElementById("logout")?.addEventListener("click", async () => {
   await window.db.auth.signOut();
-  window.location.href = "login.html";
+  window.location.href = "index.html";
 });
 
+// ── Drop zones ────────────────────────────────────────────
 const dropZona = document.getElementById("dropZona");
 const inputImagem = document.getElementById("imagem");
 const preview = document.getElementById("preview");
@@ -40,8 +105,16 @@ const inputBanner = document.getElementById("bannerImagem");
 const bannerPreview = document.getElementById("bannerPreview");
 const dropBannerInner = document.getElementById("dropBannerInner");
 
+const dropBannerMobile = document.getElementById("dropBannerMobile");
+const inputBannerMobile = document.getElementById("bannerImagemMobile");
+const bannerPreviewMobile = document.getElementById("bannerPreviewMobile");
+const dropBannerMobileInner = document.getElementById("dropBannerMobileInner");
+
 dropBanner?.addEventListener("click", () => inputBanner.click());
 inputBanner?.addEventListener("change", () => mostrarPreview(inputBanner.files[0], bannerPreview, dropBannerInner));
+
+dropBannerMobile?.addEventListener("click", () => inputBannerMobile.click());
+inputBannerMobile?.addEventListener("change", () => mostrarPreview(inputBannerMobile.files[0], bannerPreviewMobile, dropBannerMobileInner));
 
 function mostrarPreview(file, imgEl, innerEl) {
   if (!file) return;
@@ -54,16 +127,25 @@ function mostrarPreview(file, imgEl, innerEl) {
   reader.readAsDataURL(file);
 }
 
+// ── Navegação sidebar ─────────────────────────────────────
+function mostrarSecao(id) {
+  document.querySelectorAll('.a-section').forEach(s => s.classList.remove('ativa'));
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  document.getElementById(id)?.classList.add('ativa');
+  document.querySelector(`.nav-item[data-target="${id}"]`)?.classList.add('active');
+}
+
+// Mostra a primeira seção ao carregar
+document.addEventListener('DOMContentLoaded', () => mostrarSecao('section-produto'));
+
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', (e) => {
     e.preventDefault();
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    item.classList.add('active');
-    const target = item.dataset.target;
-    document.getElementById(target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    mostrarSecao(item.dataset.target);
   });
 });
 
+// ── Upload Cloudinary ─────────────────────────────────────
 async function uploadImagem(file) {
   const formData = new FormData();
   formData.append("file", file);
@@ -81,6 +163,7 @@ function setMsg(id, texto, tipo) {
   setTimeout(() => el.style.display = 'none', 4000);
 }
 
+// ── Adicionar produto ─────────────────────────────────────
 document.getElementById("add")?.addEventListener("click", async () => {
   const nome = document.getElementById("nome").value.trim();
   const precoInput = document.getElementById("preco").value.trim();
@@ -115,12 +198,14 @@ document.getElementById("add")?.addEventListener("click", async () => {
   btn.disabled = false; txt.textContent = "Adicionar Produto";
 });
 
+// ── Adicionar banner ──────────────────────────────────────
 document.getElementById("addBanner")?.addEventListener("click", async () => {
   const file = document.getElementById("bannerImagem").files[0];
+  const fileMobile = document.getElementById("bannerImagemMobile")?.files[0];
   const titulo = document.getElementById("bannerTitulo").value;
   const subtitulo = document.getElementById("bannerSubtitulo").value;
 
-  if (!file) { setMsg('bannerMsg', 'Selecione uma imagem para o banner.', 'error'); return; }
+  if (!file) { setMsg('bannerMsg', 'Selecione uma imagem desktop para o banner.', 'error'); return; }
 
   const btn = document.getElementById("addBanner");
   const txt = document.getElementById("bannerTexto");
@@ -128,12 +213,25 @@ document.getElementById("addBanner")?.addEventListener("click", async () => {
 
   try {
     const imagem = await uploadImagem(file);
-    await window.db.from("banners").insert([{ imagem, titulo, subtitulo }]);
+    let imagem_mobile = null;
+    if (fileMobile) imagem_mobile = await uploadImagem(fileMobile);
+
+    const { data: existentes } = await window.db.from("banners").select("ordem").order("ordem", { ascending: false }).limit(1);
+    const proxOrdem = existentes && existentes.length > 0 ? (existentes[0].ordem || 0) + 1 : 0;
+
+    await window.db.from("banners").insert([{ imagem, imagem_mobile, titulo, subtitulo, ordem: proxOrdem }]);
     setMsg('bannerMsg', '✓ Banner adicionado com sucesso!', 'success');
+
     document.getElementById("bannerTitulo").value = '';
     document.getElementById("bannerSubtitulo").value = '';
+    document.getElementById("bannerImagem").value = '';
+    if (document.getElementById("bannerImagemMobile")) document.getElementById("bannerImagemMobile").value = '';
+
     bannerPreview.style.display = 'none';
     dropBannerInner.style.display = 'block';
+    if (bannerPreviewMobile) { bannerPreviewMobile.style.display = 'none'; dropBannerMobileInner.style.display = 'block'; }
+
+    carregarBannersAdmin();
   } catch (err) {
     console.error(err);
     setMsg('bannerMsg', 'Erro ao enviar banner. Tente novamente.', 'error');
@@ -141,6 +239,216 @@ document.getElementById("addBanner")?.addEventListener("click", async () => {
   btn.disabled = false; txt.textContent = "Adicionar Banner";
 });
 
+// ── Carregar banners (com gestão) ─────────────────────────
+async function carregarBannersAdmin() {
+  // Garante que a lista de banners do admin existe no HTML
+  let listaEl = document.getElementById("listaBannersAdmin");
+  if (!listaEl) {
+    // Insere a seção de lista de banners abaixo do form de banner
+    const sectionBanner = document.getElementById("section-banner");
+    if (!sectionBanner) return;
+
+    const div = document.createElement("div");
+    div.id = "listaBannersAdmin";
+    div.style.marginTop = "32px";
+    sectionBanner.appendChild(div);
+    listaEl = div;
+  }
+
+  listaEl.innerHTML = '<div style="font-size:13px;color:var(--gray);margin-bottom:12px;letter-spacing:.5px;">Carregando banners…</div>';
+
+  const { data } = await window.db.from("banners").select("*").order("ordem", { ascending: true }).order("created_at", { ascending: false });
+  const banners = data || [];
+
+  if (banners.length === 0) {
+    listaEl.innerHTML = '<div class="empty-state"><p>Nenhum banner cadastrado ainda.</p></div>';
+    return;
+  }
+
+  // Injeta estilos para os cards de banner se ainda não injetados
+  if (!document.getElementById('banner-admin-style')) {
+    const s = document.createElement('style');
+    s.id = 'banner-admin-style';
+    s.textContent = `
+      .banner-admin-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .banner-admin-titulo {
+        font-family: var(--serif);
+        font-size: 20px;
+        font-weight: 300;
+        font-style: italic;
+        color: var(--black);
+      }
+      .banner-card {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        padding: 14px;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: white;
+        margin-bottom: 10px;
+        transition: all .2s;
+        cursor: grab;
+        user-select: none;
+      }
+      .banner-card:active { cursor: grabbing; }
+      .banner-card.drag-over { border-color: var(--rose); background: var(--rose-pale); }
+      .banner-card.dragging { opacity: .4; }
+      .banner-card img {
+        width: 120px;
+        height: 56px;
+        object-fit: cover;
+        border-radius: 2px;
+        flex-shrink: 0;
+        background: var(--rose-pale);
+        pointer-events: none;
+      }
+      .banner-card-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .banner-card-titulo {
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--black);
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .banner-card-sub {
+        font-size: 12px;
+        color: var(--gray);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .banner-card-acoes {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+      .drag-handle {
+        cursor: grab;
+        color: var(--gray);
+        font-size: 18px;
+        opacity: .5;
+        padding: 0 4px;
+        user-select: none;
+      }
+      .drag-handle:hover { opacity: 1; }
+      .btn-banner-del {
+        background: transparent;
+        border: 1px solid rgba(229,62,62,.3);
+        color: #e53e3e;
+        padding: 6px 12px;
+        border-radius: 2px;
+        font-family: var(--sans);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: .5px;
+        cursor: pointer;
+        transition: all .2s;
+        white-space: nowrap;
+      }
+      .btn-banner-del:hover { background: #e53e3e; color: white; border-color: #e53e3e; }
+      .banner-ordem-badge {
+        background: var(--rose-pale);
+        color: var(--rose);
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        font-size: 11px;
+        font-weight: 500;
+        padding: 2px 8px;
+        letter-spacing: .5px;
+        white-space: nowrap;
+      }
+    `;
+    document.head.appendChild(s);
+  }
+
+  listaEl.innerHTML = `
+    <div class="banner-admin-header">
+      <span class="banner-admin-titulo">${banners.length} banner(s) cadastrado(s)</span>
+      <span style="font-size:12px;color:var(--gray);letter-spacing:.3px;">⠿ Arraste para reordenar</span>
+    </div>
+    ${banners.map((b, idx) => `
+      <div class="banner-card"
+           draggable="true"
+           data-id="${b.id}"
+           data-idx="${idx}">
+        <span class="drag-handle" title="Arrastar">⠿</span>
+        <span class="banner-ordem-badge">#${idx + 1}</span>
+        <img src="${b.imagem}" alt="${b.titulo || 'Banner'}">
+        <div class="banner-card-info">
+          <p class="banner-card-titulo">${b.titulo || '(sem título)'}</p>
+          <p class="banner-card-sub">${b.subtitulo || '(sem subtítulo)'}</p>
+        </div>
+        <div class="banner-card-acoes">
+          <button class="btn-banner-del" onclick="deletarBanner('${b.id}', this)">Remover</button>
+        </div>
+      </div>
+    `).join('')}
+  `;
+
+  // Drag & drop para reordenar
+  ativarDragBanners(listaEl, banners);
+}
+
+function ativarDragBanners(container, banners) {
+  let draggingEl = null;
+
+  container.querySelectorAll('.banner-card').forEach(card => {
+    card.addEventListener('dragstart', e => {
+      draggingEl = card;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    card.addEventListener('dragend', async () => {
+      card.classList.remove('dragging');
+      container.querySelectorAll('.banner-card').forEach(c => c.classList.remove('drag-over'));
+
+      // Salva nova ordem no Supabase
+      const cards = [...container.querySelectorAll('.banner-card')];
+      for (let i = 0; i < cards.length; i++) {
+        const id = cards[i].dataset.id;
+        await window.db.from("banners").update({ ordem: i }).eq("id", id);
+      }
+      carregarBannersAdmin();
+    });
+
+    card.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (!draggingEl || draggingEl === card) return;
+      const rect = card.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      container.querySelectorAll('.banner-card').forEach(c => c.classList.remove('drag-over'));
+      card.classList.add('drag-over');
+      if (e.clientY < midY) {
+        container.insertBefore(draggingEl, card);
+      } else {
+        card.after(draggingEl);
+      }
+    });
+  });
+}
+
+async function deletarBanner(id, btn) {
+  const ok = await confirmar("Remover este banner?");
+  if (!ok) return;
+  btn.textContent = '...'; btn.disabled = true;
+  await window.db.from("banners").delete().eq("id", id);
+  carregarBannersAdmin();
+}
+
+// ── Produtos ──────────────────────────────────────────────
 async function carregarProdutos() {
   const lista = document.getElementById("listaAdmin");
   const total = document.getElementById("totalProdutos");
@@ -190,12 +498,14 @@ async function salvarEstoque(id) {
 }
 
 async function deletarProduto(id, btn) {
-  if (!confirm("Remover este produto?")) return;
+  const ok = await confirmar("Remover este produto?");
+  if (!ok) return;
   btn.textContent = '...'; btn.disabled = true;
   await window.db.from("produtos").delete().eq("id", id);
   carregarProdutos();
 }
 
+// ── Pedidos ───────────────────────────────────────────────
 async function carregarPedidos() {
   const lista = document.getElementById("listaPedidos");
   const totalEl = document.getElementById("totalPedidos");
@@ -276,6 +586,7 @@ async function carregarPedidos() {
           '<option value="cancelado"' + (p.status === 'cancelado' ? ' selected' : '') + '>Cancelado</option>' +
         '</select>' +
         (p.telefone ? '<a class="btn-wpp" href="https://wa.me/55' + p.telefone.replace(/\D/g, '') + '" target="_blank">WhatsApp</a>' : '') +
+        '<button class="btn-delete" style="margin-left:auto" onclick="deletarPedido(\'' + p.id + '\', this)">Excluir pedido</button>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -283,6 +594,14 @@ async function carregarPedidos() {
 
 async function atualizarStatus(id, status) {
   await window.db.from("pedidos").update({ status }).eq("id", id);
+  carregarPedidos();
+}
+
+async function deletarPedido(id, btn) {
+  const ok = await confirmar("Excluir este pedido permanentemente?");
+  if (!ok) return;
+  btn.textContent = '...'; btn.disabled = true;
+  await window.db.from("pedidos").delete().eq("id", id);
   carregarPedidos();
 }
 

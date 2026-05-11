@@ -7,6 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/admin.css">
+<style>
+  .a-section { display: none; }
+  .a-section.ativa { display: block; }
+</style>
 </head>
 <body>
 
@@ -21,16 +25,16 @@
 <div class="admin-layout">
   <aside class="sidebar">
     <nav class="sidebar-nav">
-      <a href="#section-produto" class="nav-item active" data-target="section-produto">
+      <a href="#" class="nav-item active" data-target="section-produto">
         <span class="nav-icon">＋</span> Novo produto
       </a>
-      <a href="#section-banner" class="nav-item" data-target="section-banner">
+      <a href="#" class="nav-item" data-target="section-banner">
         <span class="nav-icon">◈</span> Banners
       </a>
-      <a href="#section-lista" class="nav-item" data-target="section-lista">
+      <a href="#" class="nav-item" data-target="section-lista">
         <span class="nav-icon">≡</span> Produtos
       </a>
-      <a href="#section-pedidos" class="nav-item" data-target="section-pedidos">
+      <a href="#" class="nav-item" data-target="section-pedidos">
         <span class="nav-icon">📦</span> Pedidos
       </a>
     </nav>
@@ -90,16 +94,36 @@
         <p>Gerencie o slider da página inicial</p>
       </div>
       <div class="a-form">
+
+        <!-- Imagem Desktop -->
+        <p style="font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin-bottom:10px;">
+          Imagem Desktop <span style="font-weight:300;letter-spacing:.5px;text-transform:none">(recomendado: 1920×800px)</span>
+        </p>
         <div class="file-drop" id="dropBanner">
           <input type="file" id="bannerImagem" accept="image/*" hidden>
           <div class="drop-inner" id="dropBannerInner">
             <span class="drop-icon">⊕</span>
             <p>Clique para selecionar o banner</p>
-            <span class="drop-sub">Recomendado: 1920×800px</span>
+            <span class="drop-sub">Proporção 16:9 ou 2:1</span>
           </div>
           <img id="bannerPreview" style="display:none" alt="Preview banner">
         </div>
-        <div class="a-fields">
+
+        <!-- Imagem Mobile -->
+        <p style="font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin:20px 0 10px;">
+          Imagem Mobile <span style="font-weight:300;letter-spacing:.5px;text-transform:none">(recomendado: 750×750px — opcional)</span>
+        </p>
+        <div class="file-drop" id="dropBannerMobile" style="aspect-ratio:1/1;max-width:280px;">
+          <input type="file" id="bannerImagemMobile" accept="image/*" hidden>
+          <div class="drop-inner" id="dropBannerMobileInner">
+            <span class="drop-icon">⊕</span>
+            <p>Imagem para celular</p>
+            <span class="drop-sub">Proporção 1:1 ou 3:4</span>
+          </div>
+          <img id="bannerPreviewMobile" style="display:none" alt="Preview mobile">
+        </div>
+
+        <div class="a-fields" style="margin-top:20px;">
           <div class="field">
             <label>Título</label>
             <input type="text" id="bannerTitulo" placeholder="Ex: Nova Coleção">

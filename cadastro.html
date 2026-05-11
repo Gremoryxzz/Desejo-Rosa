@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Criar conta — Desejo Rosa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/login.css">
+<style>
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid #f0e5e8;
+    margin-bottom: 32px;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .tab.ativo {
+    color: var(--rose);
+    border-bottom-color: var(--rose);
+  }
+  .tab:hover { color: var(--rose); }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">← Voltar à loja</a>
+
+<div class="login-wrap">
+  <div class="login-deco"></div>
+  <div class="login-box">
+    <div class="brand">
+      <h1>Desejo Rosa</h1>
+      <p>Crie sua conta</p>
+    </div>
+
+    <div class="tabs">
+      <a href="cliente-login.html" class="tab">Entrar</a>
+      <a href="cadastro.html" class="tab ativo">Criar conta</a>
+    </div>
+
+    <div class="field">
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" placeholder="Seu nome" autocomplete="name">
+    </div>
+
+    <div class="field">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="seu@email.com" autocomplete="email">
+    </div>
+
+    <div class="field">
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+    </div>
+
+    <div class="field">
+      <label for="confirmar">Confirmar senha</label>
+      <input type="password" id="confirmar" placeholder="Repita a senha" autocomplete="new-password">
+    </div>
+
+    <button id="btnCadastro">
+      <span id="btnTexto">Criar conta</span>
+    </button>
+
+    <div id="erro" class="erro" style="display:none"></div>
+    <div id="sucesso" class="erro" style="display:none;background:#f0fff4;border-color:#38a169;color:#276749"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="javascript/cadastro.js"></script>
+</body>
+</html>

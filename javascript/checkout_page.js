@@ -3,7 +3,7 @@
 //  Lógica da página de checkout separada
 // ============================================================
 
-const BACKEND_URL = "https://sua-funcao.supabase.co/functions/v1/criar-pagamento";
+const BACKEND_URL = "https://fqsqkwcqqmfbpemftotj.supabase.co/functions/v1/criar-pagamento";
 
 let _frete = -1;
 
@@ -220,7 +220,7 @@ async function finalizarPedido() {
     let body = { itens, total, comprador: { nome, email, cpf, tel }, metodo };
 
     if (metodo === "cartao") {
-      const mp = new MercadoPago("SEU_PUBLIC_KEY_AQUI", { locale: "pt-BR" });
+      const mp = new MercadoPago("APP_USR-f25455ff-d4d9-4038-82cc-df21f240c353", { locale: "pt-BR" });
       const cardToken = await mp.createCardToken({
         cardNumber: document.getElementById("cc-num").value.replace(/\s/g,""),
         cardholderName: document.getElementById("cc-nome").value,
@@ -232,7 +232,14 @@ async function finalizarPedido() {
       body.parcelas  = document.getElementById("cc-parcelas").value;
     }
 
-    const res  = await fetch(BACKEND_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body) });
+    const res  = await fetch(BACKEND_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${window.db.supabaseKey || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxc3Frd2NxcW1mYnBlbWZ0b3RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4OTI4MDAsImV4cCI6MjA2MTQ2ODgwMH0.YoqDmooOrQKK2TohHd6kuA_pk68MTcW"}`
+      },
+      body: JSON.stringify(body)
+    });
     const data = await res.json();
 
     if (data.tipo === "pix") exibirPix(data);

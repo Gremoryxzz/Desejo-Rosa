@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar — Desejo Rosa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/login.css">
+<style>
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid #f0e5e8;
+    margin-bottom: 32px;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .tab.ativo {
+    color: var(--rose);
+    border-bottom-color: var(--rose);
+  }
+  .tab:hover { color: var(--rose); }
+  .esqueceu {
+    display: block;
+    text-align: right;
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: -16px;
+    margin-bottom: 24px;
+    text-decoration: none;
+    letter-spacing: .5px;
+    cursor: pointer;
+  }
+  .esqueceu:hover { color: var(--rose); }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">← Voltar à loja</a>
+
+<div class="login-wrap">
+  <div class="login-deco"></div>
+  <div class="login-box">
+    <div class="brand">
+      <h1>Desejo Rosa</h1>
+      <p>Acesse sua conta</p>
+    </div>
+
+    <div class="tabs">
+      <a href="cliente-login.html" class="tab ativo">Entrar</a>
+      <a href="cadastro.html" class="tab">Criar conta</a>
+    </div>
+
+    <div class="field">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="seu@email.com" autocomplete="email">
+    </div>
+
+    <div class="field">
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <a class="esqueceu" id="esqueceuSenha">Esqueceu a senha?</a>
+
+    <button id="btnLogin">
+      <span id="btnTexto">Entrar</span>
+    </button>
+
+    <div id="erro" class="erro" style="display:none"></div>
+    <div id="sucesso" class="erro" style="display:none;background:#f0fff4;border-color:#38a169;color:#276749"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="javascript/cliente-login.js"></script>
+</body>
+</html>

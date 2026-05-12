@@ -7,20 +7,37 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/carrinho.css">
+<style>
+  /* Ajuste para o header global injetado */
+  body { padding-top: 0; }
+  #dr-header-global + .c-header { display: none; }
+
+  /* Header global: link "voltar" */
+  .c-back-fixed {
+    font-size: 12px;
+    color: #8a7880;
+    text-decoration: none;
+    letter-spacing: .06em;
+    transition: color .2s;
+  }
+  .c-back-fixed:hover { color: #1a1218; }
+</style>
 </head>
 <body>
 
+<!-- Header padrão do carrinho (será sobreposto pelo header.js) -->
 <header class="c-header">
-  <a href="index.html" class="c-logo">Desejo Rosa</a>
+  <a href="index.html" class="c-logo">
+    <img src="topo.png" alt="Desejo Rosa" style="height:36px;border-radius:4px;vertical-align:middle;display:block;">
+  </a>
   <a href="index.html" class="c-back">← Continuar comprando</a>
 </header>
 
 <main class="c-main">
 
-  <!-- ── Itens ───────────────────────────── -->
+  <!-- Itens -->
   <section class="c-itens">
     <h2 class="c-titulo">Meu Carrinho <span id="c-contagem" class="c-contagem"></span></h2>
-
     <div id="lista-itens"></div>
 
     <!-- Vazio -->
@@ -31,14 +48,11 @@
     </div>
   </section>
 
-  <!-- ── Resumo fixo ──────────────────────── -->
+  <!-- Resumo fixo -->
   <aside class="c-resumo" id="c-resumo" style="display:none">
     <h3 class="resumo-titulo">Resumo do pedido</h3>
-
     <div class="resumo-linhas" id="resumo-itens-mini"></div>
-
     <div class="resumo-sep"></div>
-
     <div class="resumo-linha">
       <span>Subtotal</span>
       <span id="r-subtotal">R$ 0,00</span>
@@ -52,18 +66,22 @@
       <span>Total estimado</span>
       <span id="r-total">R$ 0,00</span>
     </div>
-
     <button class="btn-checkout" id="btn-checkout">
       Finalizar compra
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
     </button>
-
     <p class="seguranca">🔒 Pagamento 100% seguro</p>
   </aside>
 
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="javascript/header.js"></script>
 <script src="javascript/carrinho.js"></script>
 <script src="javascript/carrinho_page.js"></script>
+<script>injetarHeader("loja");</script>
 </body>
 </html>

@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Desejo Rosa — Lingerie</title>
+<link rel="icon" href="topo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/index.css">
@@ -17,9 +18,14 @@
       <a href="#lancamentos">Lançamentos</a>
       <a href="#produtos">Produtos</a>
     </nav>
-    <h1 class="logo" onclick="location.reload()">Desejo Rosa</h1>
+
+    <!-- Logo com ícone -->
+    <a href="index.html" style="display:flex;align-items:center;text-decoration:none;">
+      <img src="topo.png" alt="Desejo Rosa" style="height:44px;border-radius:4px;display:block;">
+    </a>
+
     <div class="nav-right">
-      <!-- O ícone do carrinho é injetado pelo script.js -->
+      <!-- Carrinho e botão de conta injetados pelo header.js -->
       <a href="cliente-login.html" class="btn-login" id="btn-login-header">Entrar</a>
     </div>
   </div>
@@ -77,7 +83,7 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-      <h3>Desejo Rosa</h3>
+      <img src="topo.png" alt="Desejo Rosa" style="height:48px;border-radius:4px;margin-bottom:8px;display:block;">
       <p>Lingerie com delicadeza e sofisticação para todas as mulheres.</p>
     </div>
     <div class="footer-links">
@@ -93,7 +99,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="javascript/header.js"></script>
 <script src="javascript/carrinho.js"></script>
 <script src="javascript/script.js"></script>
+<script>
+  // Inicia o header global no modo "home"
+  injetarHeader("home");
+</script>
 </body>
 </html>

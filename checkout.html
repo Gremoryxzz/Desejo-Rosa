@@ -11,7 +11,10 @@
 <body>
 
 <header class="ck-header">
-  <a href="index.html" class="ck-logo">Desejo Rosa</a>
+  <!-- Logo com ícone -->
+  <a href="index.html" class="ck-logo">
+    <img src="topo.png" alt="Desejo Rosa" style="height:36px;border-radius:4px;vertical-align:middle;display:block;">
+  </a>
   <div class="ck-steps">
     <span class="step done">Carrinho</span>
     <span class="step-arrow">›</span>
@@ -72,14 +75,12 @@
     <!-- Entrega -->
     <div class="ck-bloco">
       <h4 class="ck-bloco-titulo"><span class="num">2</span> Entrega</h4>
-
       <div class="ck-cep-wrap">
         <input type="text" id="ck-cep" placeholder="Digite seu CEP" maxlength="9">
         <button id="ck-cep-btn">Calcular</button>
       </div>
       <p class="ck-cep-info" id="ck-cep-info"></p>
 
-      <!-- Campos de endereço — aparecem após CEP válido -->
       <div id="ck-endereco-campos" class="ck-campos ck-endereco-oculto">
         <div class="ck-campo full">
           <label>Logradouro (Rua / Av.)</label>
@@ -110,13 +111,11 @@
           <input type="text" id="ck-uf" placeholder="UF" maxlength="2" readonly>
         </div>
       </div>
-
     </div>
 
     <!-- Pagamento -->
     <div class="ck-bloco">
       <h4 class="ck-bloco-titulo"><span class="num">3</span> Pagamento</h4>
-
       <div class="ck-metodos">
         <label class="ck-metodo" id="m-pix">
           <input type="radio" name="pagamento" value="pix" checked>
@@ -132,14 +131,17 @@
         <label class="ck-metodo" id="m-cartao">
           <input type="radio" name="pagamento" value="cartao">
           <div class="ck-metodo-inner">
-            <svg width="28" height="20" viewBox="0 0 28 20" fill="none"><rect width="28" height="20" rx="3" fill="#1a1a1a"/><rect y="4" width="28" height="5" fill="#c8a96e"/><rect x="3" y="13" width="8" height="2" rx="1" fill="#fff" opacity=".5"/></svg>
+            <svg width="28" height="20" viewBox="0 0 28 20" fill="none">
+              <rect width="28" height="20" rx="3" fill="#1a1a1a"/>
+              <rect y="4" width="28" height="5" fill="#c8a96e"/>
+              <rect x="3" y="13" width="8" height="2" rx="1" fill="#fff" opacity=".5"/>
+            </svg>
             <strong>Cartão</strong>
             <small>Crédito / Débito</small>
           </div>
         </label>
       </div>
 
-      <!-- Campos cartão -->
       <div id="campos-cartao" style="display:none" class="ck-campos">
         <div class="ck-campo full">
           <label>Número do cartão</label>
@@ -170,7 +172,6 @@
       </div>
     </div>
 
-    <!-- Botão finalizar -->
     <button class="ck-btn-pagar" id="ck-btn-pagar">
       <span id="ck-btn-texto">Finalizar pedido</span>
     </button>

@@ -7,11 +7,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/produto.css">
+<style>
+  /* esconde o header original quando o global for injetado */
+  .p-header { display: none !important; }
+</style>
 </head>
 <body>
 
+<!-- Header original (ocultado via CSS; o header.js injeta o global) -->
 <header class="p-header">
-  <a href="index.html" class="p-logo">Desejo Rosa</a>
+  <a href="index.html" class="p-logo">
+    <img src="topo.png" alt="Desejo Rosa" style="height:36px;border-radius:4px;display:block;">
+  </a>
   <a href="index.html" class="p-back">← Voltar</a>
 </header>
 
@@ -32,10 +39,8 @@
 
     <p class="p-desc">Peça exclusiva da coleção Desejo Rosa. Material de alta qualidade, confortável e elegante.</p>
 
-    <!-- Botões de ação -->
-    <div class="p-acoes" id="p-acoes">
-      <!-- Injetados pelo produto.js -->
-    </div>
+    <!-- Botões injetados pelo produto.js -->
+    <div class="p-acoes" id="p-acoes"></div>
 
     <a id="whatsapp" class="btn-comprar" target="_blank">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -46,7 +51,11 @@
   </div>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="javascript/header.js"></script>
 <script src="javascript/carrinho.js"></script>
 <script src="javascript/produto.js"></script>
+<script>injetarHeader("loja");</script>
 </body>
 </html>

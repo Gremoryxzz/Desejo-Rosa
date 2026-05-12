@@ -7,11 +7,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/minha-conta.css">
+<style>
+  /* Esconde o header original — o header.js injeta o global */
+  .mc-header { display: none !important; }
+  /* Garante que o conteúdo não fique atrás do header global */
+  .mc-main { padding-top: 32px; }
+</style>
 </head>
 <body>
 
+<!-- Header original ocultado; header.js injeta o topo global -->
 <header class="mc-header">
-  <a href="index.html" class="mc-logo">Desejo Rosa</a>
+  <a href="index.html" class="mc-logo">
+    <img src="topo.png" alt="Desejo Rosa" style="height:36px;border-radius:4px;display:block;">
+  </a>
   <nav class="mc-nav">
     <a href="index.html">← Continuar comprando</a>
     <button class="btn-sair" id="btnSair">Sair</button>
@@ -29,11 +38,18 @@
     </div>
     <nav class="mc-menu">
       <a class="mc-menu-item ativo" data-tab="pedidos">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
         Meus pedidos
       </a>
       <a class="mc-menu-item" data-tab="dados">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
         Meus dados
       </a>
     </nav>
@@ -48,8 +64,6 @@
         <h2>Meus pedidos</h2>
         <p id="total-pedidos"></p>
       </div>
-
-      <!-- Extrato -->
       <div class="mc-extrato">
         <div class="extrato-card">
           <span class="extrato-icon">💳</span>
@@ -59,7 +73,6 @@
           </div>
         </div>
       </div>
-
       <div id="lista-pedidos"></div>
     </div>
 
@@ -92,6 +105,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="javascript/header.js"></script>
 <script src="javascript/minha-conta.js"></script>
+<script>injetarHeader("loja");</script>
 </body>
 </html>

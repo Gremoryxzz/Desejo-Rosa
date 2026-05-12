@@ -1,4 +1,4 @@
-const ADMIN_EMAIL = "wallacegremory@gmail.com";
+// ADMIN_EMAIL já declarado em header.js — não redeclarar aqui
 
 // ── Modal de confirmação customizado ─────────────────────
 function confirmar(mensagem) {
@@ -135,8 +135,12 @@ function mostrarSecao(id) {
   document.querySelector(`.nav-item[data-target="${id}"]`)?.classList.add('active');
 }
 
-// Mostra a primeira seção ao carregar
-document.addEventListener('DOMContentLoaded', () => mostrarSecao('section-produto'));
+// Mostra a primeira seção ao carregar (compatível com script carregado após DOM)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => mostrarSecao('section-produto'));
+} else {
+  mostrarSecao('section-produto');
+}
 
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', (e) => {
@@ -606,6 +610,76 @@ async function deletarPedido(id, btn) {
 }
 
 document.getElementById("filtroPedidos")?.addEventListener("change", () => carregarPedidos());
+
+// ── Banner do Login ───────────────────────────────────────
+const dropBannerLogin      = document.getElementById("dropBannerLogin");
+const inputBannerLogin     = document.getElementById("bannerLoginImagem");
+const bannerLoginPreview   = document.getElementById("bannerLoginPreview");
+const dropBannerLoginInner = document.getElementById("dropBannerLoginInner");
+
+dropBannerLogin?.addEventListener("click", () => inputBannerLogin.click());
+inputBannerLogin?.addEventListener("change", () => mostrarPreview(inputBannerLogin.files[0], bannerLoginPreview, dropBannerLoginInner));
+
+async function carregarBannerLogin() {
+  const el = document.getElementById("banner-login-atual");
+  if (!el) return;
+  try {
+    const { data } = await window.db
+      .from("banner_login")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (data?.imagem) {
+      el.innerHTML = `
+        <img src="${data.imagem}" alt="Banner atual"
+             style="width:100%;max-width:320px;border-radius:4px;display:block;">
+        <p style="font-size:11px;color:var(--gray);margin-top:8px;letter-spacing:.3px;">
+          Adicionado em ${new Date(data.created_at).toLocaleDateString('pt-BR')}
+        </p>`;
+      return;
+    }
+  } catch(e) {}
+  el.innerHTML = `<span style="font-size:13px;color:var(--gray);padding:20px;display:block;">
+    Nenhum banner definido ainda. O fundo rosa padrão será exibido.
+  </span>`;
+}
+
+document.querySelector('.nav-item[data-target="section-banner-login"]')?.addEventListener("click", () => {
+  carregarBannerLogin();
+});
+
+document.getElementById("addBannerLogin")?.addEventListener("click", async () => {
+  const file  = inputBannerLogin?.files[0];
+  const btn   = document.getElementById("addBannerLogin");
+  const texto = document.getElementById("bannerLoginTexto");
+
+  if (!file) {
+    setMsg("bannerLoginMsg", "Selecione uma imagem primeiro.", "error"); return;
+  }
+
+  btn.disabled = true; texto.textContent = "Enviando...";
+
+  try {
+    const imagem = await uploadImagem(file);
+
+    await window.db.from("banner_login").insert([{ imagem }]);
+
+    setMsg("bannerLoginMsg", "✓ Banner do login atualizado com sucesso!", "success");
+    carregarBannerLogin();
+
+    inputBannerLogin.value = "";
+    bannerLoginPreview.style.display = "none";
+    dropBannerLoginInner.style.display = "block";
+
+  } catch(err) {
+    console.error(err);
+    setMsg("bannerLoginMsg", "Erro ao salvar banner. Tente novamente.", "error");
+  }
+
+  btn.disabled = false; texto.textContent = "Salvar banner do login";
+});
 
 const style = document.createElement('style');
 style.textContent = '@keyframes shimmer { 0%,100%{opacity:0.4} 50%{opacity:0.8} }';

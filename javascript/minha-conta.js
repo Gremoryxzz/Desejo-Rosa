@@ -2,7 +2,7 @@
 //  Desejo Rosa — minha-conta.js
 // ============================================================
 
-const ADMIN_EMAIL = "wallacegremory@gmail.com";
+// ADMIN_EMAIL já declarado em header.js — não redeclarar aqui
 let usuarioAtual = null;
 
 async function init() {

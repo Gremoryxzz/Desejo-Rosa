@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login — Desejo Rosa</title>
+<link rel="icon" href="topo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/login.css">
@@ -16,7 +17,8 @@
   <div class="login-deco"></div>
   <div class="login-box">
     <div class="brand">
-      <h1>Desejo Rosa</h1>
+      <!-- Logo com ícone -->
+      <img src="topo.png" alt="Desejo Rosa" style="height:64px;border-radius:6px;margin-bottom:16px;display:block;">
       <p>Área administrativa</p>
     </div>
 
@@ -40,6 +42,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="javascript/header.js"></script>
+<script>
+  // Se admin já está logado, vai direto pro painel
+  verificarSessaoAtiva("login-admin");
+</script>
 <script src="javascript/login.js"></script>
 </body>
 </html>

@@ -65,7 +65,7 @@ body {
 }
 
 .login-deco::before {
-  content: 'Bela Rosa';
+  content: '';
   font-family: var(--serif);
   font-size: 72px;
   font-style: italic;

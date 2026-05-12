@@ -33,8 +33,14 @@
 </head>
 <body>
 
-<a href="index.html" class="back-link">← Voltar à loja</a>
+<header class="login-header">
+  <a href="index.html">
+    <img src="topo.png" alt="Desejo Rosa" style="height:36px;border-radius:4px;display:block;">
+  </a>
+  <a href="index.html" class="login-header-voltar">&larr; Voltar &agrave; loja</a>
+</header>
 
+<div class="login-center">
 <div class="login-wrap">
   <div class="login-deco" id="login-deco-banner"></div>
   <div class="login-box">
@@ -77,6 +83,7 @@
     <div id="sucesso" class="erro" style="display:none;background:#f0fff4;border-color:#38a169;color:#276749"></div>
   </div>
 </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
@@ -87,11 +94,10 @@
     try {
       const { data } = await window.db
         .from("banner_login").select("imagem")
-        .order("created_at", { ascending: false }).limit(1);
-      if (!data || data.length === 0 || !data[0]?.imagem) return;
-      const imgSrc = data[0].imagem;
+        .order("created_at", { ascending: false }).limit(1).single();
+      if (!data?.imagem) return;
       const deco = document.getElementById("login-deco-banner");
-      if (deco) deco.innerHTML = `<img src="${imgSrc}" alt="Banner"
+      if (deco) deco.innerHTML = `<img src="${data.imagem}" alt="Banner"
         style="width:100%;height:100%;object-fit:cover;display:block;">`;
     } catch(e) {}
   })();

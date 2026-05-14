@@ -394,7 +394,7 @@ body {
 
 /* ─── RESPONSIVO ─── */
 @media (max-width: 900px) {
-  .sidebar { display: none; }
+  .sidebar { display: block; }
   .admin-main { padding: 24px 20px; }
   .a-fields { grid-template-columns: 1fr 1fr; }
 }

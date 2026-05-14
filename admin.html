@@ -425,19 +425,30 @@
 <script src="javascript/admin.js"></script>
 <script>
   // ── Menu mobile ──────────────────────────────────────────
-  const sidebar      = document.getElementById('sidebar');
-  const overlay      = document.getElementById('sidebarOverlay');
-  const mobileBtn    = document.getElementById('mobileMenuBtn');
+  const sidebar   = document.getElementById('sidebar');
+  const overlay   = document.getElementById('sidebarOverlay');
+  const mobileBtn = document.getElementById('mobileMenuBtn');
 
-  function abrirSidebar()  { sidebar.classList.add('aberta');  overlay.classList.add('ativo'); }
-  function fecharSidebar() { sidebar.classList.remove('aberta'); overlay.classList.remove('ativo'); }
+  function abrirSidebar() {
+    sidebar.style.left    = '0';
+    overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
 
-  mobileBtn?.addEventListener('click', () => {
-    sidebar.classList.contains('aberta') ? fecharSidebar() : abrirSidebar();
+  function fecharSidebar() {
+    sidebar.style.left    = '-260px';
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  mobileBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sidebar.style.left === '0px' ? fecharSidebar() : abrirSidebar();
   });
+
   overlay?.addEventListener('click', fecharSidebar);
 
-  // Fecha sidebar ao navegar (mobile)
+  // Fecha ao clicar em item do menu
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
       if (window.innerWidth <= 900) fecharSidebar();

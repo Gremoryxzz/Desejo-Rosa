@@ -32,29 +32,26 @@
     position: fixed;
     inset: 0;
     background: rgba(26,18,24,.45);
-    z-index: 998;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    z-index: 9998;
   }
   .sidebar-overlay.ativo { display: block; }
 
   @media (max-width: 900px) {
     .mobile-menu-btn { display: flex; align-items: center; }
-    .admin-layout { position: relative; z-index: 1; }
+    .admin-layout { position: static; }
     .sidebar {
       position: fixed !important;
       left: -260px;
       top: 0;
       width: 260px !important;
       height: 100vh !important;
-      z-index: 999;
+      z-index: 9999;
       transition: left .3s cubic-bezier(.4,0,.2,1);
       box-shadow: 4px 0 32px rgba(0,0,0,.18);
       overflow-y: auto;
       padding-top: 64px;
       background: white;
     }
-    .sidebar.aberta { left: 0; }
   }
 
   /* ── 3 imagens por produto ── */

@@ -1,32 +1,44 @@
+// ============================================================
+//  Desejo Rosa — produto.js  (versão atualizada)
+//  Galeria com até 3 imagens por produto
+// ============================================================
+
 const produto = JSON.parse(localStorage.getItem("produtoSelecionado"));
 
 if (produto) {
-  document.title = `${produto.nome} — Bela Rosa`;
-  document.getElementById("nome").textContent = produto.nome;
+  document.title = `${produto.nome} — Desejo Rosa`;
+  document.getElementById("nome").textContent  = produto.nome;
   document.getElementById("preco").textContent = "R$ " + Number(produto.preco).toFixed(2);
-  document.getElementById("imagemPrincipal").src = produto.imagem;
 
   const catMap = { lancamento: "Lançamento", novidade: "Novidade", outro: "Produto" };
   document.getElementById("categoria").textContent = catMap[produto.categoria] || "Produto";
 
-  // Estoque
+  // ── Estoque ───────────────────────────────────────────────
   const estoqueEl = document.getElementById("estoque-info");
   const estN = Number(produto.estoque) || 0;
   if (produto.estoque !== undefined) {
     if (estN === 0) {
       estoqueEl.textContent = "⚠ Fora de estoque";
-      estoqueEl.className = "p-estoque sem-estoque";
+      estoqueEl.className   = "p-estoque sem-estoque";
     } else if (estN <= 3) {
       estoqueEl.textContent = `⚡ Últimas ${estN} peças!`;
-      estoqueEl.className = "p-estoque estoque-baixo";
+      estoqueEl.className   = "p-estoque estoque-baixo";
     } else {
-      estoqueEl.textContent = `✓ Em estoque`;
-      estoqueEl.className = "p-estoque em-estoque";
+      estoqueEl.textContent = "✓ Em estoque";
+      estoqueEl.className   = "p-estoque em-estoque";
     }
   }
 
-  const mensagem = encodeURIComponent(`Olá! Tenho interesse no produto: ${produto.nome} — R$ ${Number(produto.preco).toFixed(2)}`);
-  document.getElementById("whatsapp").href = `https://wa.me/5521973254935?text=${mensagem}`;
+  // ── Galeria de imagens ────────────────────────────────────
+  const imagens = [produto.imagem, produto.imagem2, produto.imagem3].filter(Boolean);
+  montarGaleria(imagens);
+
+  // ── WhatsApp ──────────────────────────────────────────────
+  const mensagem = encodeURIComponent(
+    `Olá! Tenho interesse no produto: ${produto.nome} — R$ ${Number(produto.preco).toFixed(2)}`
+  );
+  document.getElementById("whatsapp").href =
+    `https://wa.me/5521973254935?text=${mensagem}`;
 
   injetarBotoes(produto);
 
@@ -34,53 +46,148 @@ if (produto) {
   window.location.href = "index.html";
 }
 
+// ── Monta galeria com thumbnails ──────────────────────────────
+function montarGaleria(imagens) {
+  const galariaEl = document.querySelector('.galeria');
+  if (!galariaEl) return;
+
+  if (imagens.length <= 1) {
+    // Apenas uma imagem — comportamento original
+    const imgPrincipal = document.getElementById("imagemPrincipal");
+    if (imgPrincipal) imgPrincipal.src = imagens[0] || '';
+    return;
+  }
+
+  // Injeta estilos da galeria
+  if (!document.getElementById('galeria-style')) {
+    const s = document.createElement('style');
+    s.id = 'galeria-style';
+    s.textContent = `
+      .galeria-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        position: sticky;
+        top: 100px;
+      }
+      .galeria-principal {
+        background: var(--rose-pale);
+        border-radius: 4px;
+        overflow: hidden;
+        aspect-ratio: 3/4;
+      }
+      .galeria-principal img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: opacity .35s, transform .5s cubic-bezier(.4,0,.2,1);
+      }
+      .galeria-thumbs {
+        display: flex;
+        gap: 8px;
+      }
+      .galeria-thumb {
+        width: 72px;
+        height: 88px;
+        border-radius: 3px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color .2s, transform .2s;
+        flex-shrink: 0;
+        background: var(--rose-pale);
+      }
+      .galeria-thumb:hover { transform: translateY(-2px); }
+      .galeria-thumb.ativa { border-color: var(--rose); }
+      .galeria-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        pointer-events: none;
+      }
+      @media (max-width: 768px) {
+        .galeria-wrap { position: static; }
+        .galeria-thumb { width: 60px; height: 72px; }
+      }
+    `;
+    document.head.appendChild(s);
+  }
+
+  // Reconstrói o HTML da galeria
+  galariaEl.innerHTML = `
+    <div class="galeria-wrap">
+      <div class="galeria-principal">
+        <img id="imagemPrincipal" src="${imagens[0]}" alt="${produto.nome}">
+      </div>
+      <div class="galeria-thumbs">
+        ${imagens.map((url, i) => `
+          <div class="galeria-thumb ${i === 0 ? 'ativa' : ''}" data-idx="${i}">
+            <img src="${url}" alt="Foto ${i + 1}">
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  // Interatividade dos thumbnails
+  const principal = document.getElementById("imagemPrincipal");
+  galariaEl.querySelectorAll('.galeria-thumb').forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      const idx = Number(thumb.dataset.idx);
+      principal.style.opacity = '0';
+      setTimeout(() => {
+        principal.src = imagens[idx];
+        principal.style.opacity = '1';
+      }, 180);
+      galariaEl.querySelectorAll('.galeria-thumb').forEach(t => t.classList.remove('ativa'));
+      thumb.classList.add('ativa');
+    });
+  });
+}
+
+// ── Botões de compra ──────────────────────────────────────────
 function injetarBotoes(produto) {
   const acoes = document.getElementById("p-acoes");
   if (!acoes) return;
 
-  const estN = Number(produto.estoque) || 0;
+  const estN      = Number(produto.estoque) || 0;
   const semEstoque = produto.estoque !== undefined && estN === 0;
 
   const style = document.createElement("style");
   style.textContent = `
-    .p-acoes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-
+    .p-acoes { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
     .btn-comprar-agora {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%; padding: 17px;
-      background: var(--rose);
-      color: #fff; border: none; border-radius: 10px;
-      font-family: 'Jost', sans-serif; font-size: 13px;
-      font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
-      cursor: pointer; transition: background .2s, transform .1s;
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      width:100%; padding:17px;
+      background:var(--rose); color:#fff; border:none; border-radius:10px;
+      font-family:'Jost',sans-serif; font-size:13px; font-weight:500;
+      letter-spacing:.12em; text-transform:uppercase;
+      cursor:pointer; transition:background .2s, transform .1s;
     }
-    .btn-comprar-agora:hover:not(:disabled)  { background: var(--rose-dark); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(160,48,80,.2); }
-    .btn-comprar-agora:active:not(:disabled) { transform: scale(.98); }
-    .btn-comprar-agora:disabled { opacity: .4; cursor: not-allowed; }
-
+    .btn-comprar-agora:hover:not(:disabled)  { background:var(--rose-dark); transform:translateY(-1px); box-shadow:0 8px 24px rgba(160,48,80,.2); }
+    .btn-comprar-agora:active:not(:disabled) { transform:scale(.98); }
+    .btn-comprar-agora:disabled              { opacity:.4; cursor:not-allowed; }
     .btn-add-carrinho {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%; padding: 15px;
-      background: transparent; color: var(--black);
-      border: 1.5px solid rgba(26,18,24,.2); border-radius: 10px;
-      font-family: 'Jost', sans-serif; font-size: 13px;
-      font-weight: 400; letter-spacing: .1em; text-transform: uppercase;
-      cursor: pointer; transition: all .2s;
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      width:100%; padding:15px;
+      background:transparent; color:var(--black);
+      border:1.5px solid rgba(26,18,24,.2); border-radius:10px;
+      font-family:'Jost',sans-serif; font-size:13px; font-weight:400;
+      letter-spacing:.1em; text-transform:uppercase;
+      cursor:pointer; transition:all .2s;
     }
-    .btn-add-carrinho:hover:not(:disabled) { border-color: var(--black); background: rgba(26,18,24,.04); }
-    .btn-add-carrinho:disabled { opacity: .4; cursor: not-allowed; }
-
+    .btn-add-carrinho:hover:not(:disabled) { border-color:var(--black); background:rgba(26,18,24,.04); }
+    .btn-add-carrinho:disabled { opacity:.4; cursor:not-allowed; }
     .link-ver-carrinho {
-      display: none; text-align: center;
-      font-family: 'Jost', sans-serif; font-size: 12px;
-      color: #888; text-decoration: underline;
-      cursor: pointer; letter-spacing: .04em;
+      display:none; text-align:center;
+      font-family:'Jost',sans-serif; font-size:12px;
+      color:#888; text-decoration:underline;
+      cursor:pointer; letter-spacing:.04em;
     }
-
-    .p-estoque { font-size: 13px; font-weight: 400; margin-bottom: 10px; letter-spacing: .3px; }
-    .em-estoque  { color: #276749; }
-    .estoque-baixo { color: #92400e; }
-    .sem-estoque { color: #c53030; }
+    .p-estoque { font-size:13px; font-weight:400; margin-bottom:10px; letter-spacing:.3px; }
+    .em-estoque    { color:#276749; }
+    .estoque-baixo { color:#92400e; }
+    .sem-estoque   { color:#c53030; }
   `;
   document.head.appendChild(style);
 
@@ -103,24 +210,18 @@ function injetarBotoes(produto) {
     <span class="link-ver-carrinho" id="link-ver-carrinho">→ Ver carrinho</span>
   `;
 
-  // Comprar agora → vai direto pro checkout
   document.getElementById("btn-comprar-agora")?.addEventListener("click", () => {
     Carrinho.adicionar({
-      id:     String(produto.id),
-      nome:   produto.nome,
-      preco:  Number(produto.preco),
-      imagem: produto.imagem
+      id: String(produto.id), nome: produto.nome,
+      preco: Number(produto.preco), imagem: produto.imagem
     });
     window.location.href = "checkout.html";
   });
 
-  // Adicionar ao carrinho → permanece na página
   document.getElementById("btn-add-carrinho")?.addEventListener("click", () => {
     Carrinho.adicionar({
-      id:     String(produto.id),
-      nome:   produto.nome,
-      preco:  Number(produto.preco),
-      imagem: produto.imagem
+      id: String(produto.id), nome: produto.nome,
+      preco: Number(produto.preco), imagem: produto.imagem
     });
     const link = document.getElementById("link-ver-carrinho");
     if (link) link.style.display = "block";

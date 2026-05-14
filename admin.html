@@ -11,15 +11,188 @@
 <style>
   .a-section { display: none; }
   .a-section.ativa { display: block; }
+
+  /* ── Mobile nav ── */
+  .mobile-menu-btn {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--gray);
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    transition: all .2s;
+  }
+  .mobile-menu-btn:hover { border-color: var(--rose); color: var(--rose); }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,18,24,.45);
+    z-index: 40;
+    backdrop-filter: blur(2px);
+  }
+  .sidebar-overlay.ativo { display: block; }
+
+  @media (max-width: 900px) {
+    .mobile-menu-btn { display: flex; align-items: center; }
+    .sidebar {
+      position: fixed !important;
+      left: -240px;
+      top: 0;
+      height: 100vh !important;
+      z-index: 50;
+      transition: left .3s cubic-bezier(.4,0,.2,1);
+      box-shadow: 4px 0 24px rgba(0,0,0,.12);
+    }
+    .sidebar.aberta { left: 0; }
+  }
+
+  /* ── 3 imagens por produto ── */
+  .multi-img-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .multi-img-slot {
+    border: 1.5px dashed var(--rose-light);
+    border-radius: 4px;
+    aspect-ratio: 3/4;
+    background: var(--rose-pale);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .multi-img-slot:hover { border-color: var(--rose); }
+  .multi-img-slot .slot-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .multi-img-slot .slot-icon {
+    font-size: 22px;
+    color: var(--rose);
+    opacity: .6;
+  }
+  .multi-img-slot img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .multi-img-slot .slot-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(229,62,62,.9);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    z-index: 2;
+    transition: background .2s;
+    display: none;
+  }
+  .multi-img-slot:hover .slot-remove { display: flex; }
+
+  /* ── Banner login slideshow ── */
+  .banner-login-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .banner-login-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: white;
+  }
+  .banner-login-card img {
+    width: 60px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 3px;
+    flex-shrink: 0;
+    background: var(--rose-pale);
+  }
+  .banner-login-card-info {
+    flex: 1;
+    font-size: 13px;
+    color: var(--gray);
+  }
+  .btn-remover-banner-login {
+    background: transparent;
+    border: 1px solid rgba(229,62,62,.3);
+    color: #e53e3e;
+    padding: 6px 12px;
+    border-radius: 2px;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+  .btn-remover-banner-login:hover { background: #e53e3e; color: white; border-color: #e53e3e; }
+
+  /* Preview slideshow no admin */
+  .banner-login-preview-slide {
+    max-width: 240px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 2/3;
+    background: var(--rose-pale);
+    margin-bottom: 16px;
+  }
+  .banner-login-preview-slide img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity .6s;
+  }
+  .banner-login-preview-slide img.ativo { opacity: 1; }
 </style>
 </head>
 <body>
 
+<!-- Overlay sidebar mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <header class="a-header">
-  <!-- Logo com ícone -->
-  <a href="index.html" style="display:flex;align-items:center;text-decoration:none;">
-    <img src="topo.png" alt="Desejo Rosa" style="height:40px;border-radius:4px;display:block;">
-  </a>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">☰</button>
+    <a href="index.html" style="display:flex;align-items:center;text-decoration:none;">
+      <img src="topo.png" alt="Desejo Rosa" style="height:40px;border-radius:4px;display:block;">
+    </a>
+  </div>
   <div class="a-header-right">
     <button class="btn-ghost" onclick="window.location.href='index.html'">Ver loja</button>
     <button class="btn-ghost btn-danger" id="logout">Sair</button>
@@ -27,7 +200,7 @@
 </header>
 
 <div class="admin-layout">
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <nav class="sidebar-nav">
       <a href="#" class="nav-item active" data-target="section-produto">
         <span class="nav-icon">＋</span> Novo produto
@@ -53,18 +226,34 @@
     <section class="a-section" id="section-produto">
       <div class="a-section-header">
         <h2>Cadastrar Produto</h2>
-        <p>Adicione novos itens à loja</p>
+        <p>Adicione novos itens à loja — até 3 imagens por produto</p>
       </div>
       <div class="a-form">
-        <div class="file-drop" id="dropZona">
-          <input type="file" id="imagem" accept="image/*" hidden>
-          <div class="drop-inner" id="dropInner">
-            <span class="drop-icon">⊕</span>
-            <p>Clique ou arraste a imagem aqui</p>
-            <span class="drop-sub">JPG, PNG, WEBP</span>
+        <!-- 3 slots de imagem -->
+        <div class="multi-img-grid" id="imgGrid">
+          <!-- Slot 1 (principal) -->
+          <div class="multi-img-slot" id="slot-0" data-slot="0">
+            <input type="file" id="imagem-0" accept="image/*" hidden>
+            <span class="slot-icon">⊕</span>
+            <span class="slot-label">Principal</span>
+            <button class="slot-remove" data-slot="0" title="Remover">×</button>
           </div>
-          <img id="preview" style="display:none" alt="Preview">
+          <!-- Slot 2 -->
+          <div class="multi-img-slot" id="slot-1" data-slot="1">
+            <input type="file" id="imagem-1" accept="image/*" hidden>
+            <span class="slot-icon">⊕</span>
+            <span class="slot-label">Foto 2</span>
+            <button class="slot-remove" data-slot="1" title="Remover">×</button>
+          </div>
+          <!-- Slot 3 -->
+          <div class="multi-img-slot" id="slot-2" data-slot="2">
+            <input type="file" id="imagem-2" accept="image/*" hidden>
+            <span class="slot-icon">⊕</span>
+            <span class="slot-label">Foto 3</span>
+            <button class="slot-remove" data-slot="2" title="Remover">×</button>
+          </div>
         </div>
+
         <div class="a-fields">
           <div class="field">
             <label>Nome do produto</label>
@@ -156,20 +345,34 @@
     <!-- BANNER LOGIN -->
     <section class="a-section" id="section-banner-login">
       <div class="a-section-header">
-        <h2>Banner da Página de Login</h2>
-        <p>Imagem exibida no lado esquerdo das páginas de login e cadastro</p>
+        <h2>Banners da Página de Login</h2>
+        <p>Imagens exibidas no lado esquerdo — alternam a cada 2 segundos</p>
       </div>
       <div class="a-form">
+
+        <!-- Preview slideshow -->
         <p style="font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin-bottom:10px;">
-          Imagem atual
+          Preview (simulação do slideshow)
         </p>
-        <div id="banner-login-atual" style="margin-bottom:24px;border-radius:4px;overflow:hidden;max-width:320px;min-height:80px;background:var(--rose-pale);display:flex;align-items:center;justify-content:center;">
-          <span style="font-size:13px;color:var(--gray);padding:16px;">Carregando…</span>
+        <div class="banner-login-preview-slide" id="banner-login-preview-slide">
+          <span style="font-size:12px;color:var(--gray);padding:20px;display:flex;align-items:center;justify-content:center;height:100%;">
+            Nenhuma imagem cadastrada
+          </span>
         </div>
+
+        <!-- Lista com botão remover -->
         <p style="font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin-bottom:10px;">
-          Nova imagem <span style="font-weight:300;letter-spacing:.5px;text-transform:none">(recomendado: 600×900px)</span>
+          Imagens cadastradas
         </p>
-        <div class="file-drop" id="dropBannerLogin" style="aspect-ratio:2/3;max-width:240px;">
+        <div class="banner-login-lista" id="banner-login-lista">
+          <span style="font-size:13px;color:var(--gray);">Carregando…</span>
+        </div>
+
+        <!-- Adicionar nova -->
+        <p style="font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin:20px 0 10px;">
+          Adicionar nova imagem <span style="font-weight:300;letter-spacing:.5px;text-transform:none">(recomendado: 600×900px)</span>
+        </p>
+        <div class="file-drop" id="dropBannerLogin" style="aspect-ratio:2/3;max-width:200px;">
           <input type="file" id="bannerLoginImagem" accept="image/*" hidden>
           <div class="drop-inner" id="dropBannerLoginInner">
             <span class="drop-icon">⊕</span>
@@ -179,7 +382,7 @@
           <img id="bannerLoginPreview" style="display:none" alt="Preview">
         </div>
         <button class="btn-primary" id="addBannerLogin" style="margin-top:20px;">
-          <span id="bannerLoginTexto">Salvar banner do login</span>
+          <span id="bannerLoginTexto">Adicionar imagem</span>
         </button>
         <div id="bannerLoginMsg" class="msg" style="display:none"></div>
       </div>
@@ -214,6 +417,26 @@
 <script src="supabase.js"></script>
 <script src="javascript/header.js"></script>
 <script src="javascript/admin.js"></script>
-<script>injetarHeader("admin");</script>
+<script>
+  // ── Menu mobile ──────────────────────────────────────────
+  const sidebar      = document.getElementById('sidebar');
+  const overlay      = document.getElementById('sidebarOverlay');
+  const mobileBtn    = document.getElementById('mobileMenuBtn');
+
+  function abrirSidebar()  { sidebar.classList.add('aberta');  overlay.classList.add('ativo'); }
+  function fecharSidebar() { sidebar.classList.remove('aberta'); overlay.classList.remove('ativo'); }
+
+  mobileBtn?.addEventListener('click', () => {
+    sidebar.classList.contains('aberta') ? fecharSidebar() : abrirSidebar();
+  });
+  overlay?.addEventListener('click', fecharSidebar);
+
+  // Fecha sidebar ao navegar (mobile)
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth <= 900) fecharSidebar();
+    });
+  });
+</script>
 </body>
 </html>

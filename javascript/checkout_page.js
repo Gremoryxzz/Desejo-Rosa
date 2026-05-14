@@ -1,9 +1,9 @@
 // ============================================================
-//  Bela Rosa — checkout_page.js
-//  Lógica da página de checkout separada
+//  Desejo Rosa — checkout_page.js
 // ============================================================
 
-const BACKEND_URL = "https://fqsqkwcqqmfbpemftotj.supabase.co/functions/v1/criar-pagamento";
+const BACKEND_URL  = "https://fqsqkwcqqmfbpemftotj.supabase.co/functions/v1/criar-pagamento";
+const SUPABASE_KEY = "sb_publishable_YoqDmooOrQKK2TohHd6kuA_pk68MTcW"; // chave pública anon
 
 let _frete = -1;
 
@@ -69,7 +69,6 @@ function configurarCEP() {
     input.value = v;
   });
 
-  // Também dispara ao apertar Enter no campo
   input.addEventListener("keydown", e => { if (e.key === "Enter") btn.click(); });
 
   btn.addEventListener("click", async () => {
@@ -91,24 +90,18 @@ function configurarCEP() {
         return;
       }
 
-      // Preenche campos automaticamente
       document.getElementById("ck-rua").value    = data.logradouro || "";
       document.getElementById("ck-bairro").value = data.bairro     || "";
       document.getElementById("ck-cidade").value = data.localidade || "";
       document.getElementById("ck-uf").value     = data.uf         || "";
 
-      // Mostra frete calculado
       _frete = 18.90;
       const sub = Carrinho.total();
       const freteTexto = sub >= 150 ? "✓ Frete grátis!" : `R$ ${fmt(_frete)} — Entrega via Correios`;
       info.innerHTML = `<strong>📍 ${data.logradouro ? data.logradouro + ', ' : ''}${data.bairro ? data.bairro + ' — ' : ''}${data.localidade}/${data.uf}</strong><br><span style="color:${sub>=150?'#2e7d32':'inherit'}">${freteTexto}</span>`;
 
-      // Exibe os campos de endereço
       campos.classList.add("visivel");
-
-      // Foca no número se rua veio preenchida
       setTimeout(() => document.getElementById("ck-numero").focus(), 100);
-
       atualizarTotais();
     } catch {
       info.textContent = "Erro ao buscar CEP. Verifique sua conexão.";
@@ -158,15 +151,12 @@ async function finalizarPedido() {
   const email = document.getElementById("ck-email").value.trim();
   const cpf   = document.getElementById("ck-cpf").value.replace(/\D/g,"");
   const tel   = document.getElementById("ck-tel").value.replace(/\D/g,"");
-  const cep   = document.getElementById("ck-cep").value.replace(/\D/g,"");
-  const cepInfo = document.getElementById("ck-cep-info").textContent;
 
   if (!nome || !email || cpf.length !== 11 || tel.length < 10) {
     Carrinho.mostrarToast("Preencha todos os dados corretamente."); return;
   }
 
-  // Valida endereço
-  const numero = document.getElementById("ck-numero")?.value.trim();
+  const numero    = document.getElementById("ck-numero")?.value.trim();
   const camposEnd = document.getElementById("ck-endereco-campos");
   if (camposEnd?.classList.contains("visivel") && !numero) {
     Carrinho.mostrarToast("Informe o número do endereço."); return;
@@ -184,24 +174,20 @@ async function finalizarPedido() {
 
   // Salvar pedido no Supabase
   try {
-    const cidadeUF = cepInfo.split('—');
-    const cidade   = cidadeUF[0]?.trim().split(', ').pop() || '';
-    const uf       = cidadeUF[1]?.trim() || '';
-
     await window.db.from("pedidos").insert([{
       nome,
       email,
-      cpf: document.getElementById("ck-cpf").value,
-      telefone: document.getElementById("ck-tel").value,
-      cep: document.getElementById("ck-cep").value,
-      rua: document.getElementById("ck-rua")?.value || '',
-      numero: document.getElementById("ck-numero")?.value || '',
-      complemento: document.getElementById("ck-complemento")?.value || '',
-      bairro: document.getElementById("ck-bairro")?.value || '',
-      referencia: document.getElementById("ck-referencia")?.value || '',
-      cidade: document.getElementById("ck-cidade")?.value || '',
-      uf: document.getElementById("ck-uf")?.value || '',
-      itens: JSON.stringify(itens),
+      cpf:        document.getElementById("ck-cpf").value,
+      telefone:   document.getElementById("ck-tel").value,
+      cep:        document.getElementById("ck-cep").value,
+      rua:        document.getElementById("ck-rua")?.value         || '',
+      numero:     document.getElementById("ck-numero")?.value      || '',
+      complemento:document.getElementById("ck-complemento")?.value || '',
+      bairro:     document.getElementById("ck-bairro")?.value      || '',
+      referencia: document.getElementById("ck-referencia")?.value  || '',
+      cidade:     document.getElementById("ck-cidade")?.value      || '',
+      uf:         document.getElementById("ck-uf")?.value          || '',
+      itens:      JSON.stringify(itens),
       total,
       metodo,
       status: "pendente"
@@ -212,31 +198,28 @@ async function finalizarPedido() {
 
   // Pagamento
   try {
-    if (BACKEND_URL.includes("sua-funcao")) {
-      await simularPagamento(metodo, total);
-      return;
-    }
-
     let body = { itens, total, comprador: { nome, email, cpf, tel }, metodo };
 
     if (metodo === "cartao") {
       const mp = new MercadoPago("APP_USR-f25455ff-d4d9-4038-82cc-df21f240c353", { locale: "pt-BR" });
       const cardToken = await mp.createCardToken({
-        cardNumber: document.getElementById("cc-num").value.replace(/\s/g,""),
-        cardholderName: document.getElementById("cc-nome").value,
+        cardNumber:          document.getElementById("cc-num").value.replace(/\s/g,""),
+        cardholderName:      document.getElementById("cc-nome").value,
         cardExpirationMonth: document.getElementById("cc-val").value.split("/")[0],
-        cardExpirationYear: "20" + document.getElementById("cc-val").value.split("/")[1],
-        securityCode: document.getElementById("cc-cvv").value
+        cardExpirationYear:  "20" + document.getElementById("cc-val").value.split("/")[1],
+        securityCode:        document.getElementById("cc-cvv").value
       });
       body.cardToken = cardToken.id;
       body.parcelas  = document.getElementById("cc-parcelas").value;
     }
 
-    const res  = await fetch(BACKEND_URL, {
+    // ✅ JWT hardcoded removido — usa apenas a chave pública anon
+    const res = await fetch(BACKEND_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${window.db.supabaseKey || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxc3Frd2NxcW1mYnBlbWZ0b3RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4OTI4MDAsImV4cCI6MjA2MTQ2ODgwMH0.YoqDmooOrQKK2TohHd6kuA_pk68MTcW"}`
+        "Content-Type":  "application/json",
+        "apikey":        SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
       },
       body: JSON.stringify(body)
     });
@@ -252,21 +235,6 @@ async function finalizarPedido() {
     btn.disabled = false;
     texto.textContent = "Finalizar pedido";
   }
-}
-
-async function simularPagamento(metodo, total) {
-  await new Promise(r => setTimeout(r, 1800));
-  if (metodo === "pix") {
-    exibirPix({
-      qr_code_base64: null,
-      codigo_copia_cola: "00020126580014br.gov.bcb.pix0136BELAROSA-DEMO-PIX5204000053039865802BR5925Bela Rosa Lingerie6008Sao Paulo62070503***6304DEMO",
-      expiracao: new Date(Date.now() + 30*60*1000).toISOString()
-    });
-  } else {
-    exibirResultadoCartao({ status: "approved", mensagem: "Pagamento aprovado! ✓ (simulação)" });
-  }
-  document.getElementById("ck-btn-pagar").disabled = false;
-  document.getElementById("ck-btn-texto").textContent = "Finalizar pedido";
 }
 
 function exibirPix(data) {
